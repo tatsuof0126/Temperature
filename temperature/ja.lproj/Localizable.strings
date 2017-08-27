@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  temperature
+
+  Created by 藤原 達郎 on 2017/08/19.
+  Copyright © 2017年 Tatsuo Fujiwara. All rights reserved.
+*/
+"appname" = "熱はかった？";
+
+"removeads" = "広告を削除";
+
+"purchased" = "購入済み";

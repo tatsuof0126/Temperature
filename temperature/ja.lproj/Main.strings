@@ -1,0 +1,9 @@
+
+/* Class = "UITabBarItem"; title = "Record"; ObjectID = "acW-dT-cKf"; */
+"acW-dT-cKf.title" = "体温の記録";
+
+/* Class = "UITabBarItem"; title = "Graph"; ObjectID = "cPa-gy-q4n"; */
+"cPa-gy-q4n.title" = "グラフ";
+
+/* Class = "UITabBarItem"; title = "Config"; ObjectID = "4vt-rr-xoX"; */
+"4vt-rr-xoX.title" = "設定";

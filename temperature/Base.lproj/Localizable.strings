@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  temperature
+
+  Created by 藤原 達郎 on 2017/08/19.
+  Copyright © 2017年 Tatsuo Fujiwara. All rights reserved.
+*/
+"appname" = "Body Temperature Recorder";
+
+"removeads" = "Remove Ads";
+
+"purchased" = "Purchased";
