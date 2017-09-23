@@ -10,3 +10,21 @@
 "removeads" = "Remove Ads";
 
 "purchased" = "Purchased";
+
+"purchaseaddon" = "Purchase Addon";
+
+"removeads2" = "Remove Ads";
+
+"purchaseduser" = "Purchased User";
+
+"restoreaddon" = "Restore Purchased Addon";
+
+"withmemo" = "[with Memo]";
+
+"ok" = "OK";
+"cancel" = "Cancel";
+
+"deleteconfirm" = "Delete the record. Is it OK?";
+
+"noinput" = "Need to input";
+"invalidtemperature" = "Invalid Temperature";

@@ -18,6 +18,10 @@ class CommonAdsViewController: UIViewController, GADBannerViewDelegate {
     var gadLoaded: Bool = false
     
     func makeGadBannerView(withTab: Bool) {
+        if(ConfigManager.isShowAds() == false){
+            return
+        }
+        
         gadBannerView = GADBannerView(adSize:kGADAdSizeBanner)
         
         let y = self.view.frame.size.height - gadBannerView.frame.size.height - (withTab ? 50 : 0)

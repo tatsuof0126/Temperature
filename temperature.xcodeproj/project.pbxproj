@@ -28,6 +28,12 @@
 		0B2D146B1F4E782900441AD1 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2D146A1F4E782900441AD1 /* Utility.swift */; };
 		0B2D146D1F4E7F4B00441AD1 /* SelectConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2D146C1F4E7F4B00441AD1 /* SelectConditionsViewController.swift */; };
 		0B2D14701F50945F00441AD1 /* PurchaseAddonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2D146F1F50945F00441AD1 /* PurchaseAddonViewController.swift */; };
+		0B63D0B21F5DA0A10084398C /* TemperatureCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B63D0B11F5DA0A10084398C /* TemperatureCondition.swift */; };
+		0B63D0B41F6AC7380084398C /* TemperatureGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B63D0B31F6AC7370084398C /* TemperatureGraphView.swift */; };
+		0B63D0B61F7416510084398C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B63D0B51F7416510084398C /* StoreKit.framework */; };
+		0B63D0BA1F7417AD0084398C /* InAppPurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B63D0B91F7417AD0084398C /* InAppPurchaseManager.swift */; };
+		0B63D0BC1F741DF00084398C /* InAppProductManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B63D0BB1F741DF00084398C /* InAppProductManager.swift */; };
+		0B93D92E1F586B0200E172EA /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B93D92D1F586B0200E172EA /* ConfigManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +62,12 @@
 		0B2D146A1F4E782900441AD1 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		0B2D146C1F4E7F4B00441AD1 /* SelectConditionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectConditionsViewController.swift; sourceTree = "<group>"; };
 		0B2D146F1F50945F00441AD1 /* PurchaseAddonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PurchaseAddonViewController.swift; sourceTree = "<group>"; };
+		0B63D0B11F5DA0A10084398C /* TemperatureCondition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemperatureCondition.swift; sourceTree = "<group>"; };
+		0B63D0B31F6AC7370084398C /* TemperatureGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemperatureGraphView.swift; sourceTree = "<group>"; };
+		0B63D0B51F7416510084398C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		0B63D0B91F7417AD0084398C /* InAppPurchaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InAppPurchaseManager.swift; sourceTree = "<group>"; };
+		0B63D0BB1F741DF00084398C /* InAppProductManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InAppProductManager.swift; sourceTree = "<group>"; };
+		0B93D92D1F586B0200E172EA /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		0F398ACBFC8B455017D730C1 /* Pods-temperature.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-temperature.release.xcconfig"; path = "Pods/Target Support Files/Pods-temperature/Pods-temperature.release.xcconfig"; sourceTree = "<group>"; };
 		56D94ED969B764ACCF06B13A /* Pods_temperature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_temperature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92402101B64971950E4FBE2A /* Pods-temperature.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-temperature.debug.xcconfig"; path = "Pods/Target Support Files/Pods-temperature/Pods-temperature.debug.xcconfig"; sourceTree = "<group>"; };
@@ -67,6 +79,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09DB18891FB918567DEED4CA /* Pods_temperature.framework in Frameworks */,
+				0B63D0B61F7416510084398C /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,8 +116,13 @@
 				0B2D14641F48939000441AD1 /* InputRecordViewController.swift */,
 				0B2D146C1F4E7F4B00441AD1 /* SelectConditionsViewController.swift */,
 				0B2D146F1F50945F00441AD1 /* PurchaseAddonViewController.swift */,
+				0B63D0BB1F741DF00084398C /* InAppProductManager.swift */,
+				0B63D0B91F7417AD0084398C /* InAppPurchaseManager.swift */,
+				0B63D0B31F6AC7370084398C /* TemperatureGraphView.swift */,
 				0B2D14661F4E671300441AD1 /* Temperature.swift */,
+				0B63D0B11F5DA0A10084398C /* TemperatureCondition.swift */,
 				0B2D14681F4E6C8200441AD1 /* Condition.swift */,
+				0B93D92D1F586B0200E172EA /* ConfigManager.swift */,
 				0B2D146A1F4E782900441AD1 /* Utility.swift */,
 				0B1D20CB1F43503D00F81922 /* Main.storyboard */,
 				0B1D20CE1F43503D00F81922 /* Assets.xcassets */,
@@ -130,6 +148,7 @@
 		A58C0C36A874597037823424 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0B63D0B51F7416510084398C /* StoreKit.framework */,
 				56D94ED969B764ACCF06B13A /* Pods_temperature.framework */,
 			);
 			name = Frameworks;
@@ -174,13 +193,18 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = "Tatsuo Fujiwara";
 				TargetAttributes = {
 					0B1D20C11F43503C00F81922 = {
 						CreatedOnToolsVersion = 8.2;
 						DevelopmentTeam = PNCW72YDW4;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -292,12 +316,17 @@
 				0B2D146B1F4E782900441AD1 /* Utility.swift in Sources */,
 				0B2D14631F488CCE00441AD1 /* GraphViewController.swift in Sources */,
 				0B2D146D1F4E7F4B00441AD1 /* SelectConditionsViewController.swift in Sources */,
+				0B63D0B21F5DA0A10084398C /* TemperatureCondition.swift in Sources */,
 				0B2D14651F48939000441AD1 /* InputRecordViewController.swift in Sources */,
 				0B1D20C61F43503D00F81922 /* AppDelegate.swift in Sources */,
+				0B63D0BC1F741DF00084398C /* InAppProductManager.swift in Sources */,
+				0B63D0B41F6AC7380084398C /* TemperatureGraphView.swift in Sources */,
 				0B2D14521F48779400441AD1 /* ConfigViewController.swift in Sources */,
 				0B2D14671F4E671300441AD1 /* Temperature.swift in Sources */,
 				0B2D14701F50945F00441AD1 /* PurchaseAddonViewController.swift in Sources */,
 				0B2D14541F487FD100441AD1 /* CommonAdsViewController.swift in Sources */,
+				0B93D92E1F586B0200E172EA /* ConfigManager.swift in Sources */,
+				0B63D0BA1F7417AD0084398C /* InAppPurchaseManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,7 +406,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";

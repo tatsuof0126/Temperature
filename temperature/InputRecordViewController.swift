@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleMobileAds
+import RealmSwift
 
 class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, UITextViewDelegate {
     
@@ -17,6 +18,8 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
     
     @IBOutlet var temperatureText: UITextField!
     
+    @IBOutlet var unitsLabel: UILabel!
+    
     @IBOutlet var conditionText: UITextView!
     
     @IBOutlet var memoTitle: UILabel!
@@ -24,50 +27,59 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
     @IBOutlet var memoText: UITextView!
     
     @IBOutlet var conditionClearBtn: UIButton!
+    @IBOutlet var deleteBtn: UIButton!
+    
+    @IBOutlet var pickerBaseView: UIView!
+    @IBOutlet var datePicker: UIDatePicker!
     
     var temperature: Temperature!
+    var temperatureDate: Date!
+    var conditionList: List<TemperatureCondition>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if temperature == nil {
             temperature = Temperature()
+            
+            // 直近３日に記録があれば、症状を引き継ぐ
+            let date3 = NSDate(timeInterval: 60*60*24*(-3), since: Date())
+            let recent3List = Temperature.getDateFilteredTemperature(startDate: date3, endDate: NSDate(), ascending: false)
+            if let recent3 = recent3List.first {
+                for condition in recent3.conditionList {
+                    temperature.conditionList.append(condition)
+                }
+            }
         }
         
-        /*
-        // テストデータ
-        temperature.temperature = 36.9
-        temperature.memo = "こんにちは"
-        temperature.conditionList = [
-            Condition(id: 1, condition: "鼻水"),
-            Condition(id: 2, condition: "鼻づまり")
-        ]
-         */
-
-    
+        temperatureDate = temperature.date
+        
+        conditionList = List<TemperatureCondition>()
+        for condition in temperature.conditionList {
+            conditionList.append(condition)
+        }
+        
+        
         // 画面の初期値を設定
-        var timeString: String = ""
-        let dateFormatter = DateFormatter()
-        if(Utility.isJapaneseLocale()){
-            dateFormatter.dateFormat = "M月d日(E) H:mm" // 日付フォーマットの設定
-        } else {
-            dateFormatter.dateFormat = "E, MMM d h:mm a" // 日付フォーマットの設定
-        }
-        timeString = dateFormatter.string(from: temperature.date)
-        timeLabel.text = timeString
+        // 日時
+        setTemperatureDate()
         
+        // 体温
         if temperature.temperature != 0.0 {
-            temperatureText.text = temperature.temperature.description
+            temperatureText.text = temperature.getTemperatureString(withUnit: false)
         }
         
+        if ConfigManager.isUseFahrenheit() {
+            unitsLabel.text = "°F"
+        } else {
+            unitsLabel.text = "°C"
+        }
+        
+        // 症状
         setConditionString()
         
+        // メモ
         memoText.text = temperature.memo
-        
-        
-        // デフォルトで体温にフォーカス
-        // TODO 既存データの更新だったらフォーカス当てない
-        temperatureText.becomeFirstResponder()
         
         // メモTextViewを整形
         memoText.layer.borderWidth = 1
@@ -75,6 +87,15 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
         memoText.layer.cornerRadius = 8
         
         scrollView.contentSize = CGSize(width: 320, height: 680)
+        
+        // 新規の場合はデフォルトで体温にフォーカス
+        if temperature.id == "" {
+            temperatureText.becomeFirstResponder()
+            deleteBtn.isHidden = true
+        }
+        
+        // ピッカーの初期化（非表示にして画面下に配置）
+        closePicker()
         
         makeGadBannerView(withTab: false)
     }
@@ -90,58 +111,136 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
     }
     
     @IBAction func timeChangeButton(_ sender: Any) {
-        
-        
+        showDatePicker()
     }
     
-    
     @IBAction func conditionClearButton(_ sender: Any) {
-        temperature.conditionList = []
+        conditionList = List<TemperatureCondition>()
         setConditionString()
     }
     
     @IBAction func saveButton(_ sender: Any) {
         let retString = checkInput()
         if retString != "" {
-            print("Error : \(retString)")
-            
-            // TODO ダイアログ表示
+            Utility.showAlert(controller: self, title: "", message: retString)
             return
         }
         
         let temperatureDouble: Double = NSString(string: temperatureText.text!).doubleValue
-        temperature.temperature = temperatureDouble
-        temperature.memo = memoText.text
         
-        
-        
-        
-        
+        let realm = try! Realm()
+        try! realm.write {
+            temperature.date = temperatureDate
+            temperature.temperature = temperatureDouble
+
+            temperature.conditionList.removeAll()
+            for condition in conditionList {
+                temperature.conditionList.append(condition)
+            }
+            
+            temperature.memo = memoText.text
+            temperature.useFahrenheit = ConfigManager.isUseFahrenheit()
+            temperature.setId()
+            realm.add(temperature, update: true)
+        }
         
         let delegate = UIApplication.shared.delegate as! AppDelegate
-        delegate.showInterstitial(self)
+        delegate.showInterstitialFlag = true
+        
+        self.dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func deleteButton(_ sender: Any) {
+        let handler = {(action: UIAlertAction) -> Void in
+            self.deleteTemperature()
+        }
+        Utility.showConfirmDialog(controller: self, title: "", message: NSLocalizedString("deleteconfirm", comment: ""), handler: handler)
+    }
+    
+    func deleteTemperature() {
+        let realm = try! Realm()
+        try! realm.write {
+            realm.delete(temperature)
+        }
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        delegate.showInterstitialFlag = true
+        
+        self.dismiss(animated: true, completion: nil)
+    }
+
     @IBAction func backButton(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func endEditing() {
+        self.view.endEditing(true)
+    }
+    
+    func showDatePicker() {
+        // 現在の編集を終わらせる
+        endEditing()
+        closePicker()
+        
+        // 広告ビューを隠す
+        if gadBannerView != nil {
+            gadBannerView.isHidden = true
+        }
+        
+        datePicker.date = temperatureDate
+        
+        // TODO ピッカーに現在時刻に合わせる機能をつける？
+        
+        
+        // ピッカーをアニメーションで表示
+        pickerBaseView.isHidden = false
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: [], animations: {
+            self.pickerBaseView.frame = CGRect(x: self.pickerBaseView.frame.origin.x,
+                                          y: self.pickerBaseView.frame.origin.y-self.pickerBaseView.frame.size.height,
+                                          width: self.pickerBaseView.frame.size.width,
+                                          height: self.pickerBaseView.frame.size.height)
+        }, completion: nil)
+        
+    }
+    
+    func closePicker() {
+        pickerBaseView.isHidden = true
+        pickerBaseView.frame = CGRect(x: self.pickerBaseView.frame.origin.x,
+                                        y: self.view.frame.size.height,
+                                        width: self.pickerBaseView.frame.size.width,
+                                        height: self.pickerBaseView.frame.size.height)
+        
+        // 広告ビューを復活
+        if gadBannerView != nil {
+            gadBannerView.isHidden = false
+        }
+    }
+    
+    @IBAction func pickerDoneButton(_ sender: Any) {
+        temperatureDate = datePicker.date
+        
+        setTemperatureDate()
+
+        closePicker()
+    }
+    
+    @IBAction func pickerCancelButton(_ sender: Any) {
+        closePicker()
     }
     
     func checkInput() -> String {
         var retString = ""
         
         // 空チェック
-        if (temperatureText.text == "" && temperature.conditionList.count == 0 &&
+        if (temperatureText.text == "" && conditionList.count == 0 &&
             memoText.text == "") {
-            // TODO 多言語化
-            retString.append("入力がありません。")
+            retString.append(NSLocalizedString("noinput", comment: ""))
         }
         
         // 体温が数値かどうかチェック
         let temperatureDouble: Double = NSString(string: temperatureText.text!).doubleValue
-        print("temperatureDouble : \(temperatureDouble)")
-        if temperatureDouble == 0.0 {
-            // TODO 多言語化
-            retString.append("体温の入力が不正です。")
+        if temperatureText.text != "" && temperatureDouble == 0.0 {
+            retString.append(NSLocalizedString("invalidtemperature", comment: ""))
         }
         
         return retString
@@ -156,24 +255,27 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
         return true
     }
     */
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        // ピッカーを閉じる
+        closePicker()
+    }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         if (textView == memoText){
             var adjustHeight:CGFloat = 20.0
-            if(temperature.conditionList.count != 0){
+            if(conditionList.count != 0){
                 adjustHeight = conditionText.frame.size.height
             }
             scrollView.setContentOffset(CGPoint(x: 0, y: 125+adjustHeight), animated: true)
         }
         
         // ピッカーを閉じる
-        
+        closePicker()
         
         // 編集済みにする
         // edited = YES;
-
     }
-    
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if (textView == memoText){
@@ -182,29 +284,28 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
     }
     
     @IBAction func onTap(_ sender: Any) {
-        self.view.endEditing(true)
-        // TODO ピッカーも閉じる
+        // Picker起動中は処理しない
+        if(pickerBaseView.isHidden == false){
+            return
+        }
         
-        
+        // 無関係の場所をタップされたら編集を終わらせ、ピッカーも閉じる
+        endEditing()
+        closePicker()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setConditionString()
     }
 
+    func setTemperatureDate(){
+        timeLabel.text = Temperature.getTemperatureDateString(date: temperatureDate)
+    }
+    
     func setConditionString() {
-        var conditionStr = ""
+        conditionText.text = Temperature.getConditionString(conditionList: conditionList)
         
-        for (index, condition) in temperature.conditionList.enumerated() {
-            if index != 0 {
-                conditionStr.append(", ")
-            }
-            conditionStr.append(condition.condition)
-        }
-        
-        conditionText.text = conditionStr
-        
-        if temperature.conditionList.count == 0 {
+        if conditionList.count == 0 {
             conditionClearBtn.isHidden = true
         } else {
             conditionClearBtn.isHidden = false
@@ -220,7 +321,7 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
         
         // Memoの場所を調整
         var adjustHeight:CGFloat = 0.0
-        if(temperature.conditionList.count == 0){
+        if(conditionList.count == 0){
             adjustHeight = 20
             conditionText.isHidden = true
         } else {

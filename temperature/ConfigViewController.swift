@@ -15,6 +15,8 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
     
     @IBOutlet var configTableView: UITableView!
     
+    @IBOutlet var useFahrenheitSwitch: UISwitch!
+    
     @IBOutlet var versionLabel: UILabel!
     
     static let menu = ["removeads"]
@@ -22,6 +24,8 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        useFahrenheitSwitch.isOn = ConfigManager.isUseFahrenheit()
         
         // アプリ名とバージョンの表示
         let version: String? = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
@@ -45,9 +49,15 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "configcell")
+        let cell = UITableViewCell(style: .value1, reuseIdentifier: "configcell")
+        
         cell.textLabel?.text = NSLocalizedString(ConfigViewController.menu[indexPath.row], comment: "")
-        cell.detailTextLabel?.text = NSLocalizedString("purchased", comment: "")
+        
+        if indexPath.row == 0 {
+            // 広告削除アドオンを購入済みなら購入済みと表示
+            cell.detailTextLabel?.text = ConfigManager.isShowAds() ? "" : NSLocalizedString("purchased", comment: "")
+        }
+        
         return cell
     }
     
@@ -57,6 +67,10 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath:IndexPath) {
         performSegue(withIdentifier: "inapppurchase", sender: nil)
+    }
+    
+    @IBAction func switchChanged(_ sender: Any) {
+        ConfigManager.setUseFahrenheit(useFahrenheit: useFahrenheitSwitch.isOn)
     }
     
     override func viewWillAppear(_ animated: Bool) {

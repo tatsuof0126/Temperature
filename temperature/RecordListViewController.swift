@@ -8,20 +8,38 @@
 
 import UIKit
 import GoogleMobileAds
+import RealmSwift
 
-class RecordListViewController: CommonAdsViewController {
+class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    @IBOutlet var segmentedControl: UISegmentedControl!
     
     @IBOutlet var tableView: UITableView!
+    
+    var temperatureList: Results<Temperature>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.backgroundColor = UIColor.orange
+        segmentedControl.selectedSegmentIndex = ConfigManager.getRecordListType()
         
+        // TODO 複数人対応？
         
-        
+        // loadTemperatureData()
         
         makeGadBannerView(withTab: true)
+    }
+    
+    func loadTemperatureData(){
+        if segmentedControl.selectedSegmentIndex == 0 {
+            let date7 = NSDate(timeInterval: 60*60*24*(-7), since: Date())
+            temperatureList = Temperature.getDateFilteredTemperature(date: date7, ascending: false)
+        } else if segmentedControl.selectedSegmentIndex == 1 {
+            let date30 = NSDate(timeInterval: 60*60*24*(-30), since: Date())
+            temperatureList = Temperature.getDateFilteredTemperature(date: date30, ascending: false)
+        } else if segmentedControl.selectedSegmentIndex == 2 {
+            temperatureList = Temperature.getAllTemperature(ascending: false)
+        }
     }
     
     override func adViewDidReceiveAd(_ bannerView: GADBannerView){
@@ -34,15 +52,83 @@ class RecordListViewController: CommonAdsViewController {
         }
     }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "recordlistcell")
+        
+        let temperature = temperatureList[indexPath.row]
+        
+        let labelStr = NSMutableAttributedString()
+        labelStr.append(temperature.getTemperatureDateNSAttributedString())
+        labelStr.append(NSAttributedString(string: "  "))
+        if temperature.temperature != 0.0 {
+            labelStr.append(temperature.getTemperatureNSAttributedString())
+        }
+        
+        cell.textLabel?.attributedText = labelStr
+        
+        let detailLabelStr = NSMutableString()
+        if temperature.conditionList.count > 0 {
+            detailLabelStr.append(" ")
+            detailLabelStr.append(temperature.getConditionString())
+        }
+        if temperature.memo != "" {
+            detailLabelStr.append(" ")
+            detailLabelStr.append(NSLocalizedString("withmemo", comment: ""))
+        }
+        
+        cell.detailTextLabel?.text = detailLabelStr as String
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return temperatureList.count
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath:IndexPath) {
+        performSegue(withIdentifier: "updaterecord", sender: nil)
+    }
+    
+    @IBAction func segmentedControlChanged(_ sender: Any) {
+        ConfigManager.setRecordListType(recordListType: segmentedControl.selectedSegmentIndex)
+        loadTemperatureData()
+        tableView.reloadData()
+    }
+    
     @IBAction func addButton(_ sender: Any) {
-        performSegue(withIdentifier: "inputrecord",sender: nil)
+        performSegue(withIdentifier: "addrecord", sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "inputrecord") {
-//            let vc2: ViewController2 = (segue.destination as? ViewController2)!
-//            vc2.textVC2 = "to VC2"
-            print("prepare segue")
+        if (segue.identifier == "addrecord") {
+            let inputController = segue.destination as? InputRecordViewController
+            inputController?.temperature = nil
+        } else if segue.identifier == "updaterecord" {
+            let row = tableView.indexPathForSelectedRow!.row
+            let temperature = temperatureList[row]
+            
+            let inputController = segue.destination as? InputRecordViewController
+            inputController?.temperature = temperature
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if (tableView.indexPathForSelectedRow != nil) {
+            tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
+        }
+        
+        loadTemperatureData()
+        tableView.reloadData()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        if delegate.showInterstitialFlag {
+            delegate.showInterstitial(self)
         }
     }
     

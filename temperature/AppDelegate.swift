@@ -11,10 +11,16 @@ import Firebase
 import GoogleMobileAds
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
-
+class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate, PurchaseManagerDelegate {
+    
+    // 広告を非表示にするならfalse（リリース時はtrue）
+    static let SHOW_ADS = true
+    
+    // インタースティシャル広告の表示割合（％）
+    static let SHOW_INTERSTITIAL_RATIO = 25
+    
     var window: UIWindow?
-
+    
     var gadInterstitial: GADInterstitial!
     var showInterstitialFlag: Bool!
     
@@ -28,6 +34,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
         GADMobileAds.configure(withApplicationID: "ca-app-pub-6719193336347757~1520777841")
         showInterstitialFlag = false
         prepareInterstitial()
+        
+        // Conditionが初期化されていなかったら初期データを作る
+        if Condition.checkConditionList() == false {
+            Condition.makeDefaultConditionList()
+        }
         
         return true
     }
@@ -69,6 +80,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
     }
     
     func showInterstitial(_ controller: UIViewController) {
+        if(ConfigManager.isShowAds() == false){
+            return
+        }
+        
+        let rand = (Int)(arc4random_uniform(100))
+        // print("rand : \(rand)")
+        if rand >= AppDelegate.SHOW_INTERSTITIAL_RATIO {
+            return
+        }
+        
         if gadInterstitial.isReady {
             gadInterstitial?.present(fromRootViewController: controller)
         } else {
@@ -78,27 +99,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
     }
     
     func interstitialDidDismissScreen(_ ad: GADInterstitial) {
-        print("interstitialDidDismissScreen")
+        // print("interstitialDidDismissScreen")
         prepareInterstitial()
     }
 
     func interstitialDidReceiveAd(_ ad: GADInterstitial) {
-        print("interstitialDidReceiveAd")
+        // print("interstitialDidReceiveAd")
     }
     
     /// Tells the delegate an ad request failed.
     func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {
-        print("interstitial:didFailToReceiveAdWithError: \(error.localizedDescription)")
+        // print("interstitial:didFailToReceiveAdWithError: \(error.localizedDescription)")
     }
     
     /// Tells the delegate that an interstitial will be presented.
     func interstitialWillPresentScreen(_ ad: GADInterstitial) {
-        print("interstitialWillPresentScreen")
+        // print("interstitialWillPresentScreen")
     }
     
     /// Tells the delegate the interstitial is to be animated off the screen.
     func interstitialWillDismissScreen(_ ad: GADInterstitial) {
-        print("interstitialWillDismissScreen")
+        // print("interstitialWillDismissScreen")
     }
     
     /// Tells the delegate the interstitial had been animated off the screen.
@@ -109,7 +130,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
     /// Tells the delegate that a user click will open another app
     /// (such as the App Store), backgrounding the current app.
     func interstitialWillLeaveApplication(_ ad: GADInterstitial) {
-        print("interstitialWillLeaveApplication")
+        // print("interstitialWillLeaveApplication")
     }
+    
 }
-

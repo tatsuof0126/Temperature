@@ -8,12 +8,13 @@
 
 import UIKit
 import GoogleMobileAds
+import RealmSwift
 
 class SelectConditionsViewController: CommonAdsViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var tableView: UITableView!
     
-    var conditionList: [Condition]!
+    var conditionList: Results<Condition>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,19 +48,27 @@ class SelectConditionsViewController: CommonAdsViewController, UITableViewDelega
     }
     
     @IBAction func okButton(_ sender: Any) {
-        var retConditionList: [Condition] = []
+        var conditionIds:[Int] = []
         
         if let indexPaths = tableView.indexPathsForSelectedRows {
             for indexPath in indexPaths {
-                retConditionList.append(conditionList[indexPath.row])
+                conditionIds.append(indexPath.row)
             }
         }
+        // 選択した症状を上から並び替え
+        conditionIds = conditionIds.sorted { $0 < $1 }
         
-        // retConditionListを並び替え
-        retConditionList = retConditionList.sorted(by: {$0.id < $1.id})
+        let retConditionList = List<TemperatureCondition>()
+        conditionIds.forEach {
+            let temperatureCondition = TemperatureCondition()
+            temperatureCondition.id = conditionList[$0].id
+            temperatureCondition.langage = conditionList[$0].langage
+            temperatureCondition.condition = conditionList[$0].condition
+            retConditionList.append(temperatureCondition)
+        }
         
         let inputView: InputRecordViewController = self.presentingViewController as! InputRecordViewController
-        inputView.temperature.conditionList = retConditionList
+        inputView.conditionList = retConditionList
         
         self.dismiss(animated: true, completion: nil)
     }
@@ -72,7 +81,7 @@ class SelectConditionsViewController: CommonAdsViewController, UITableViewDelega
         // TableViewの初期選択状態を設定
         let inputView: InputRecordViewController = self.presentingViewController as! InputRecordViewController
         
-        for selectCondition in inputView.temperature.conditionList {
+        for selectCondition in inputView.conditionList {
             for (index, condition) in conditionList.enumerated() {
                 if(selectCondition.id == condition.id){
                     let indexPath: IndexPath = IndexPath(row: index, section: 0)

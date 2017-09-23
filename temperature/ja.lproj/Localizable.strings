@@ -7,6 +7,30 @@
 */
 "appname" = "熱はかった？";
 
-"removeads" = "広告を削除";
+"removeads" = "広告を削除（アドオン購入画面へ）";
 
 "purchased" = "購入済み";
+
+"purchaseaddon" = "アドオンを購入";
+
+"removeads2" = "広告を削除";
+
+"purchaseduser" = "以前にアドオンを購入済みの方";
+
+"restoreaddon" = "購入済みアドオンをリストア";
+
+"withmemo" = "［メモあり］";
+
+"ok" = "OK";
+"cancel" = "キャンセル";
+
+"deleteconfirm" = "記録を削除します。よろしいですか？";
+
+"noinput" = "体温、症状、メモのどれかは入力する必要があります。";
+"invalidtemperature" = "体温の入力が不正です。";
+
+
+
+
+
+

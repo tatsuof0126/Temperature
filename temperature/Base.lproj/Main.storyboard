@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C68" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,7 +21,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <items>
-                                    <navigationItem title="Body Temperature Record" id="Pm1-gW-H0v">
+                                    <navigationItem title="Temperature Record" id="Pm1-gW-H0v">
                                         <barButtonItem key="rightBarButtonItem" title="Add" id="vdi-MN-cwA">
                                             <connections>
                                                 <action selector="addButton:" destination="9pv-A4-QxB" id="zFI-Xv-42C"/>
@@ -31,17 +31,61 @@
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="UW6-jz-txr">
-                                <rect key="frame" x="0.0" y="64" width="320" height="454"/>
+                                <rect key="frame" x="0.0" y="108" width="320" height="410"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="recordlistcell" textLabel="mLa-WE-ZCt" detailTextLabel="0M8-ov-1EI" style="IBUITableViewCellStyleSubtitle" id="7qC-D2-8t8">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7qC-D2-8t8" id="dP0-Us-7Ce">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mLa-WE-ZCt">
+                                                    <rect key="frame" x="15" y="5" width="33" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0M8-ov-1EI">
+                                                    <rect key="frame" x="15" y="25" width="44" height="15"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="9pv-A4-QxB" id="8e1-BV-uhH"/>
+                                    <outlet property="delegate" destination="9pv-A4-QxB" id="TB5-CY-MfF"/>
+                                </connections>
                             </tableView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="uDB-oj-JDk">
+                                <rect key="frame" x="20" y="72" width="280" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Last 7days"/>
+                                    <segment title="Last 30days"/>
+                                    <segment title="All"/>
+                                </segments>
+                                <connections>
+                                    <action selector="segmentedControlChanged:" destination="9pv-A4-QxB" eventType="valueChanged" id="42H-9S-dPq"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Record" image="list.png" id="acW-dT-cKf"/>
                     <connections>
+                        <outlet property="segmentedControl" destination="uDB-oj-JDk" id="jyq-qh-5fQ"/>
                         <outlet property="tableView" destination="UW6-jz-txr" id="uZv-3C-grJ"/>
-                        <segue destination="KUY-Hz-ufO" kind="modal" identifier="inputrecord" modalTransitionStyle="crossDissolve" id="uLy-pV-j70"/>
+                        <segue destination="KUY-Hz-ufO" kind="modal" identifier="addrecord" modalTransitionStyle="crossDissolve" id="uLy-pV-j70"/>
+                        <segue destination="KUY-Hz-ufO" kind="modal" identifier="updaterecord" modalTransitionStyle="crossDissolve" id="d8q-F5-tPs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -123,7 +167,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="℃" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mAx-tr-aae">
-                                        <rect key="frame" x="210" y="66" width="20" height="21"/>
+                                        <rect key="frame" x="211" y="66" width="20" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
@@ -172,8 +216,47 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="mKx-PG-J0a">
+                                        <rect key="frame" x="245" y="300" width="60" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Delete"/>
+                                        <connections>
+                                            <action selector="deleteButton:" destination="KUY-Hz-ufO" eventType="touchUpInside" id="brw-Ge-NgJ"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </scrollView>
+                            <view contentMode="scaleToFill" misplaced="YES" id="C2Q-5B-hNH">
+                                <rect key="frame" x="0.0" y="308" width="320" height="260"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" id="HGb-nU-bkk">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="216"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <date key="date" timeIntervalSinceReferenceDate="526059319.64169598">
+                                            <!--2017-09-02 15:35:19 +0000-->
+                                        </date>
+                                    </datePicker>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="JOv-5E-Gvi">
+                                        <rect key="frame" x="0.0" y="-10" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <items>
+                                            <barButtonItem systemItem="cancel" id="y21-wg-7Ak">
+                                                <connections>
+                                                    <action selector="pickerCancelButton:" destination="KUY-Hz-ufO" id="gyH-f7-6Yg"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="wmK-Lc-vvb"/>
+                                            <barButtonItem systemItem="done" id="oi5-Tm-N00">
+                                                <connections>
+                                                    <action selector="pickerDoneButton:" destination="KUY-Hz-ufO" id="qmr-o7-Uqf"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </items>
+                                    </toolbar>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -184,11 +267,15 @@
                     <connections>
                         <outlet property="conditionClearBtn" destination="PyU-23-b3J" id="0sy-hR-u36"/>
                         <outlet property="conditionText" destination="3hH-Vd-SyH" id="03a-DP-gRV"/>
+                        <outlet property="datePicker" destination="HGb-nU-bkk" id="PZD-vN-u5Q"/>
+                        <outlet property="deleteBtn" destination="mKx-PG-J0a" id="5pE-3C-r16"/>
                         <outlet property="memoText" destination="QPO-M3-Jz0" id="iW9-Mn-Krk"/>
                         <outlet property="memoTitle" destination="D9K-Tw-KJ2" id="SjV-fp-FXC"/>
+                        <outlet property="pickerBaseView" destination="C2Q-5B-hNH" id="OHA-G7-T8t"/>
                         <outlet property="scrollView" destination="eo3-bE-BJm" id="l98-ta-80N"/>
                         <outlet property="temperatureText" destination="cU5-JM-Jms" id="cJ5-fA-mUg"/>
                         <outlet property="timeLabel" destination="kTO-av-dy5" id="opd-gg-eKf"/>
+                        <outlet property="unitsLabel" destination="mAx-tr-aae" id="deG-kv-41N"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AY3-Nx-Z44" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -236,7 +323,7 @@
                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ykf-4B-vaM" id="vmy-ZA-a2S">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="D9n-jl-sYS">
@@ -281,13 +368,94 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" id="nx2-au-Vn4">
                                 <rect key="frame" x="0.0" y="64" width="320" height="454"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" misplaced="YES" id="RWr-hb-cXs" customClass="TemperatureGraphView" customModule="temperature" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="44" width="320" height="320"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rGN-aT-zRU">
+                                        <rect key="frame" x="40" y="8" width="50" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="&lt; &lt;"/>
+                                        <connections>
+                                            <action selector="dateBackButton:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="y98-p9-ey8"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="07N-ID-U2C">
+                                        <rect key="frame" x="100" y="8" width="120" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <state key="normal" title="12月30日(金)"/>
+                                        <connections>
+                                            <action selector="specifyDateButton:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="ltq-8X-HVM"/>
+                                        </connections>
+                                    </button>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="Aca-QU-XQi">
+                                        <rect key="frame" x="160" y="372" width="140" height="29"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <segments>
+                                            <segment title="3 days"/>
+                                            <segment title="7 days"/>
+                                        </segments>
+                                        <connections>
+                                            <action selector="segmentedControlChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="QUH-dI-0eR"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="kXf-k9-FQX">
+                                        <rect key="frame" x="230" y="6" width="50" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="&gt; &gt;"/>
+                                        <connections>
+                                            <action selector="dateForwardButton:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="k2a-Bb-JDN"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                             </scrollView>
+                            <view contentMode="scaleToFill" misplaced="YES" id="v8Z-kQ-Wuw">
+                                <rect key="frame" x="0.0" y="306" width="320" height="260"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="pS7-VN-d2H">
+                                        <rect key="frame" x="0.0" y="-7" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <items>
+                                            <barButtonItem systemItem="cancel" id="3J1-ra-qqJ">
+                                                <connections>
+                                                    <action selector="pickerCancelButton:" destination="8rJ-Kc-sve" id="fw2-6f-4co"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="hcv-OK-4PH"/>
+                                            <barButtonItem systemItem="done" id="bv8-xK-stK">
+                                                <connections>
+                                                    <action selector="pickerDoneButton:" destination="8rJ-Kc-sve" id="742-X0-JoL"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </items>
+                                    </toolbar>
+                                    <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" id="KKQ-He-UwD">
+                                        <rect key="frame" x="0.0" y="37" width="320" height="216"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <date key="date" timeIntervalSinceReferenceDate="527351787.59069699">
+                                            <!--2017-09-17 14:36:27 +0000-->
+                                        </date>
+                                    </datePicker>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Graph" image="statistics.png" id="cPa-gy-q4n"/>
                     <connections>
+                        <outlet property="baseDateBtn" destination="07N-ID-U2C" id="2hw-Xz-nOU"/>
+                        <outlet property="datePicker" destination="KKQ-He-UwD" id="X4e-0l-eeY"/>
+                        <outlet property="graphView" destination="RWr-hb-cXs" id="h0a-BR-eMd"/>
+                        <outlet property="pickerBaseView" destination="v8Z-kQ-Wuw" id="lRW-OH-nv5"/>
                         <outlet property="scrollView" destination="nx2-au-Vn4" id="BOd-GR-Leg"/>
+                        <outlet property="segmentedControl" destination="Aca-QU-XQi" id="M8M-Zn-GO3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
@@ -327,14 +495,14 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Js8-B8-cm0">
-                                                            <rect key="frame" x="15" y="11" width="34" height="21"/>
+                                                            <rect key="frame" x="15" y="12" width="33" height="21"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vky-1E-FR3">
-                                                            <rect key="frame" x="261" y="11" width="44" height="21"/>
+                                                            <rect key="frame" x="261" y="12" width="44" height="21"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
@@ -349,13 +517,27 @@
                                             <outlet property="delegate" destination="iuo-aI-ntn" id="U92-jK-Bvr"/>
                                         </connections>
                                     </tableView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Body Temperature Recorder ver1.0.0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="P4C-il-n29">
-                                        <rect key="frame" x="25" y="216" width="280" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Body Temperature Recorder ver1.0.0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="P4C-il-n29">
+                                        <rect key="frame" x="25" y="300" width="280" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Display in Fahrenheit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yIu-iv-nOX">
+                                        <rect key="frame" x="20" y="168" width="200" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="0ZJ-Md-3jI">
+                                        <rect key="frame" x="249" y="163" width="51" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <connections>
+                                            <action selector="switchChanged:" destination="iuo-aI-ntn" eventType="valueChanged" id="pB8-lh-vEZ"/>
+                                        </connections>
+                                    </switch>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -365,6 +547,7 @@
                     <connections>
                         <outlet property="configTableView" destination="JKu-iM-88j" id="Pnz-N5-u4o"/>
                         <outlet property="scrollView" destination="35J-Oa-tXO" id="t8r-lV-VVG"/>
+                        <outlet property="useFahrenheitSwitch" destination="0ZJ-Md-3jI" id="bZP-Ri-7yW"/>
                         <outlet property="versionLabel" destination="P4C-il-n29" id="9LQ-L2-VSg"/>
                         <segue destination="26h-wv-U3E" kind="modal" identifier="inapppurchase" modalTransitionStyle="crossDissolve" id="abL-Fu-4CJ"/>
                     </connections>
@@ -395,6 +578,41 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="pWd-KG-h8u">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="purchasecell" textLabel="cdG-yo-3Ce" detailTextLabel="but-RM-exw" style="IBUITableViewCellStyleValue1" id="j6u-vY-Daw">
+                                        <rect key="frame" x="0.0" y="56" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="j6u-vY-Daw" id="C7b-eu-M4c">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cdG-yo-3Ce">
+                                                    <rect key="frame" x="15" y="12" width="33" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="but-RM-exw">
+                                                    <rect key="frame" x="261" y="12" width="44" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="26h-wv-U3E" id="Bx5-Pi-jzA"/>
+                                    <outlet property="delegate" destination="26h-wv-U3E" id="1KB-Yn-bHo"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -434,4 +652,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4_0.fullscreen"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="uLy-pV-j70"/>
+    </inferredMetricsTieBreakers>
 </document>
