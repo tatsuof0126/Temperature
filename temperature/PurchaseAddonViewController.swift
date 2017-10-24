@@ -11,10 +11,19 @@ import GoogleMobileAds
 
 class PurchaseAddonViewController: CommonAdsViewController, UITableViewDelegate, UITableViewDataSource, PurchaseManagerDelegate {
     
+    @IBOutlet var tableView: UITableView!
+    
+    var doingPurchase = false
+    
+    var indicatorView: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // fetchProductInformationForIds(["com.tatsuo.temperature.removeads"])
+        indicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        indicatorView.hidesWhenStopped = true
+        indicatorView.center = self.view.center
+        self.view.addSubview(indicatorView)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -45,7 +54,7 @@ class PurchaseAddonViewController: CommonAdsViewController, UITableViewDelegate,
         var labelText = ""
         if indexPath.section == 0 {
             if indexPath.row == 0 {
-                labelText = NSLocalizedString("removeads2", comment: "")
+                labelText = NSLocalizedString("removeads", comment: "")
             }
         } else if indexPath.section == 1 {
             if indexPath.row == 0 {
@@ -64,12 +73,12 @@ class PurchaseAddonViewController: CommonAdsViewController, UITableViewDelegate,
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath:IndexPath) {
-        print("Selected : \(indexPath.section)-\(indexPath.row)")
-        
         if indexPath.section == 0 {
             if indexPath.row == 0 {
                 // 広告を削除
-                startPurchase(productIdentifier: "com.tatsuo.temperature.removeads")
+                if ConfigManager.isShowAds() == true {
+                    startPurchase(productIdentifier: "com.tatsuo.temperature.removeads")
+                }
             }
         } else if indexPath.section == 1 {
             if indexPath.row == 0 {
@@ -77,100 +86,107 @@ class PurchaseAddonViewController: CommonAdsViewController, UITableViewDelegate,
                 startRestore()
             }
         }
+
+        tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: false)
     }
     
-    // 購入処理開始
+    // 購入処理
     func startPurchase(productIdentifier: String) {
-        print("購入処理開始!!")
+        print("購入処理開始")
         
+        // tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: false)
+        
+        if doingPurchase == true {
+            return
+        }
+        doingPurchase = true
+        
+        // インジケーター
+        indicatorView.startAnimating()
+        
+        // 購入処理を開始
         let purchaseManager = InAppPurchaseManager.getPurchaseManager()
         purchaseManager.delegate = self
-        
-        // プロダクト情報を取得
-        InAppProductManager.productsWithProductIdentifiers(productIdentifiers: [productIdentifier],
-                                                            completion: { (products, error) -> Void in
-            
-            print("productsWithProductIdentifiers completion")
-            if (products?.count)! > 0 {
-                //課金処理開始
-                print("products?[0] : \(String(describing: products?[0].localizedTitle))")
-                purchaseManager.startWithProduct((products?[0])!)
-            }
-            if (error != nil) {
-                print("Error : \(String(describing: error?.description))")
-            }
-        })
+        purchaseManager.purchase(productIdentifier: productIdentifier)
     }
     
-    // リストア開始
+    // リストア
     func startRestore() {
-        print("リストア処理開始!!")
+        print("リストア処理開始")
         
+        // tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: false)
+        
+        if doingPurchase == true {
+            return
+        }
+        doingPurchase = true
+        
+        // インジケーター
+        indicatorView.startAnimating()
+        
+        // リストア処理を開始
         let purchaseManager = InAppPurchaseManager.getPurchaseManager()
         purchaseManager.delegate = self
-        purchaseManager.startRestore()
+        purchaseManager.restore()
     }
     
-    //------------------------------------
-    // MARK: - PurchaseManager Delegate
-    //------------------------------------
-    //課金終了時に呼び出される
-    func purchaseManager(_ purchaseManager: InAppPurchaseManager!, didFinishPurchaseWithTransaction transaction: SKPaymentTransaction!, decisionHandler: ((_ complete: Bool) -> Void)!) {
-        print("課金終了！！")
-        //---------------------------
-        // コンテンツ解放処理
-        //---------------------------
-        // TODO UserDefault更新
-        //コンテンツ解放が終了したら、この処理を実行(true: 課金処理全部完了, false 課金処理中断)
-        decisionHandler(true)
+    // 購入成功
+    func purchaseSuccess(productIdentifier: String) {
+        print("PurchaseSuccess : \(productIdentifier)")
+        
+        if productIdentifier == "com.tatsuo.temperature.removeads" {
+            ConfigManager.setShowAds(showAds: false)
+            
+            Utility.showAlert(controller: self, title: NSLocalizedString("completepurchase", comment: ""),
+                              message: NSLocalizedString("removedads", comment: ""))
+        }
+        doingPurchase = false
+        indicatorView.stopAnimating()
+        tableView.reloadData()
     }
     
-    //課金終了時に呼び出される(startPurchaseで指定したプロダクトID以外のものが課金された時。)
-    func purchaseManager(_ purchaseManager: InAppPurchaseManager!, didFinishUntreatedPurchaseWithTransaction transaction: SKPaymentTransaction!, decisionHandler: ((_ complete: Bool) -> Void)!) {
-        print("課金終了（指定プロダクトID以外）！！")
-        //---------------------------
-        // コンテンツ解放処理
-        //---------------------------
-        //コンテンツ解放が終了したら、この処理を実行(true: 課金処理全部完了, false 課金処理中断)
-        decisionHandler(true)
+    // 購入失敗
+    func purchaseFail(message: String) {
+        print("PurchaseFail : \(message)")
+        
+        Utility.showAlert(controller: self, title: "", message: message)
+        doingPurchase = false
+        indicatorView.stopAnimating()
+        tableView.reloadData()
     }
     
-    // 課金失敗時に呼び出される
-    func purchaseManager(_ purchaseManager: InAppPurchaseManager!, didFailWithError error: NSError!) {
-        print("課金失敗！！")
-        // TODO errorを使ってアラート表示
+    // リストア成功（復元した購入を反映）
+    func restorePurchase(productIdentifier: String) {
+        print("RestorePurchase : \(productIdentifier)")
+        
+        if productIdentifier == "com.tatsuo.temperature.removeads" &&
+            ConfigManager.isShowAds() == true {
+            ConfigManager.setShowAds(showAds: false)
+            
+            Utility.showAlert(controller: self, title: NSLocalizedString("donerestore", comment: ""),
+                              message: NSLocalizedString("removedads", comment: ""))
+        }
     }
     
-    // リストア終了時に呼び出される(個々のトランザクションは”課金終了”で処理)
-    func purchaseManagerDidFinishRestore(_ purchaseManager: InAppPurchaseManager!) {
-        print("リストア終了！！")
-        // TODO インジケータなどを表示していたら非表示に
+    // リストア完了
+    func restoreSuccess() {
+        print("RestoreSuccess")
+        
+        Utility.showAlert(controller: self, title: "", message: NSLocalizedString("completerestore", comment: ""))
+        doingPurchase = false
+        indicatorView.stopAnimating()
+        tableView.reloadData()
     }
     
-    // 承認待ち状態時に呼び出される(ファミリー共有)
-    func purchaseManagerDidDeferred(_ purchaseManager: InAppPurchaseManager!) {
-        print("承認待ち！！")
-        // TODO インジケータなどを表示していたら非表示に
+    // リストア失敗
+    func restoreFail(message: String) {
+        print("RestoreFail")
+        
+        Utility.showAlert(controller: self, title: "", message: message)
+        doingPurchase = false
+        indicatorView.stopAnimating()
+        tableView.reloadData()
     }
-    
-    /*
-    // プロダクト情報取得
-    fileprivate func fetchProductInformationForIds(_ productIds:[String]) {
-        InAppProductManager.productsWithProductIdentifiers(productIdentifiers: productIds,completion: {[weak self] (products : [SKProduct]?, error : NSError?) -> Void in
-            if error != nil {
-                return
-            }
-            for product in products! {
-                let priceString = InAppProductManager.priceStringFromProduct(product: product)
-                if self != nil {
-                    print(product.localizedTitle + ":\(priceString)")
-                    // self?.priceLabel.text = product.localizedTitle + ":(priceString)"
-                }
-                print(product.localizedTitle + ":\(priceString)" )
-            }
-        })
-    }
-    */
     
     @IBAction func backButton(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)

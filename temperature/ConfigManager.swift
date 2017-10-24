@@ -73,4 +73,17 @@ class ConfigManager {
         userDefaults.set(graphRangeType, forKey: "GRAPHRANGETYPE")
     }
     
+    static func getToAddress() -> String {
+        let userDefaults = UserDefaults.standard
+        if (userDefaults.object(forKey: "TOADDRESS") == nil) {
+            setToAddress(toAddress: "")
+        }
+        return userDefaults.string(forKey: "TOADDRESS")!
+    }
+    
+    static func setToAddress(toAddress: String) {
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(toAddress, forKey: "TOADDRESS")
+    }
+    
 }

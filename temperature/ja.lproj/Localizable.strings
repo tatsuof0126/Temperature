@@ -7,17 +7,27 @@
 */
 "appname" = "熱はかった？";
 
-"removeads" = "広告を削除（アドオン購入画面へ）";
+"goremoveads" = "広告を削除（アドオン購入画面へ）";
+"gopurchase" = "アドオン購入画面へ";
 
 "purchased" = "購入済み";
 
 "purchaseaddon" = "アドオンを購入";
 
-"removeads2" = "広告を削除";
+"removeads" = "広告を削除";
 
 "purchaseduser" = "以前にアドオンを購入済みの方";
 
 "restoreaddon" = "購入済みアドオンをリストア";
+
+"completepurchase" = "購入しました";
+"donerestore" = "リストアしました";
+"completerestore" = "リストアが完了しました";
+"removedads" = "広告が表示されなくなりました";
+
+"notallowedpurchase" = "アプリ内での購入が許可されていません。設定を確認してください。";
+"failpurchase" = "購入に失敗しました。ネットワーク接続を確認して再度行ってください。";
+"failrestore" = "リストアに失敗しました。ネットワーク接続を確認して再度行ってください。";
 
 "withmemo" = "［メモあり］";
 
@@ -29,8 +39,16 @@
 "noinput" = "体温、症状、メモのどれかは入力する必要があります。";
 "invalidtemperature" = "体温の入力が不正です。";
 
+"sendgraph" = "体温グラフを送信";
+"selectmethod" = "送信方法を選んでください";
+"sendbyline" = "LINEで送る";
+"sendbymail" = "メールで送る";
+"sendfailline" = "送信できませんでした。LINEがインストールされているかを確認してください。";
+"sendfailmail" = "送信できませんでした。メールアプリの設定を確認してください。";
+"sendcomplete" = "送信しました。";
 
+"recordmailsubject" = "体温の記録";
+"recordmailbody" = "アプリ「熱はかった？」から送信";
 
-
-
-
+"graphmailsubject" = "体温グラフ";
+"graphmailbody" = "アプリ「熱はかった？」から送信";

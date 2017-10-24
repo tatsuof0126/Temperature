@@ -9,210 +9,105 @@
 import Foundation
 import StoreKit
 
-private let purchaseManager = InAppPurchaseManager()
 
-class InAppPurchaseManager : NSObject, SKPaymentTransactionObserver {
-    
-    var delegate : PurchaseManagerDelegate?
-    fileprivate var productIdentifier : String?
-    fileprivate var isRestore : Bool = false
+class InAppPurchaseManager : NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
 
     // シングルトン
+    static let purchaseManager = InAppPurchaseManager()
     class func getPurchaseManager() -> InAppPurchaseManager {
         return purchaseManager;
     }
     
-    // 課金開始
-    func startWithProduct(_ product : SKProduct){
-        print("startWithProduct : \(product.localizedTitle)")
-        
-        var errorCount = 0
-        var errorMessage = ""
-        
+    var delegate : PurchaseManagerDelegate?
+    
+    func purchase(productIdentifier: String) {
         if SKPaymentQueue.canMakePayments() == false {
-            errorCount += 1
-            errorMessage = "設定で購入が無効になっています。"
+            delegate?.restoreFail(message: NSLocalizedString("notallowedpurchase", comment: ""))
         }
-        if self.productIdentifier != nil {
-            errorCount += 10
-            errorMessage = "課金処理中です。"
-        }
-        if self.isRestore == true {
-            errorCount += 100
-            errorMessage = "リストア中です。"
-        }
-        
-        //エラーがあれば終了
-        if errorCount > 0 {
-            let error = NSError(domain: "PurchaseErrorDomain", code: errorCount, userInfo: [NSLocalizedDescriptionKey:errorMessage + "((errorCount))"])
-            self.delegate?.purchaseManager?(self, didFailWithError: error)
-            return
-        }
-        
-        print("startWithProduct do : \(product.localizedTitle)")
-        
-        //未処理のトランザクションがあればそれを利用
-        let transactions = SKPaymentQueue.default().transactions
-        if transactions.count > 0 {
-            for transaction in transactions {
-                if transaction.transactionState != .purchased {
-                    continue
-                }
-                if transaction.payment.productIdentifier == product.productIdentifier {
-                    if let window = UIApplication.shared.delegate?.window {
-                        let ac = UIAlertController(title: nil, message: "(product.localizedTitle)は購入処理が中断されていました。このまま無料でダウンロードできます。", preferredStyle: .alert)
-                        let action = UIAlertAction(title: "続行", style: UIAlertActionStyle.default, handler: {[weak self] (action : UIAlertAction!) -> Void in
-                            if let weakSelf = self {
-                                weakSelf.productIdentifier = product.productIdentifier
-                                weakSelf.completeTransaction(transaction)
-                            }
-                        })
-                        ac.addAction(action)
-                        window!.rootViewController?.present(ac, animated: true, completion: nil)
-                        return
-                    }
-                }
-            }
-        }
-        
-        print("startWithProduct do2 : \(product.localizedTitle)")
 
-        //課金処理開始
-        let payment = SKMutablePayment(product: product)
-        SKPaymentQueue.default().add(payment)
-        self.productIdentifier = product.productIdentifier
+        // まずプロダクト情報を取得
+        let productsRequest = SKProductsRequest(productIdentifiers: Set([productIdentifier]))
+        productsRequest.delegate = self
+        productsRequest.start()
     }
-    
-    // リストア開始
-    func startRestore(){
-        print("startRestore")
-        
-        if self.isRestore == false {
-            print("self.isRestore == false")
-            self.isRestore = true
-            SKPaymentQueue.default().add(self)
-            SKPaymentQueue.default().restoreCompletedTransactions()
+
+    // 商品情報取得に成功した場合
+    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
+        if response.products.count > 0 {
+            // 購入処理に進む
+            doPurchase(response.products[0])
         } else {
-            let error = NSError(domain: "PurchaseErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey:"リストア処理中です。"])
-            self.delegate?.purchaseManager?(self, didFailWithError: error)
-            print("error : \(error.description)")
+            delegate?.purchaseFail(message: NSLocalizedString("failpurchase", comment: ""))
         }
     }
     
-    // MARK: - SKPaymentTransactionObserver
+    // 商品情報取得に失敗した場合
+    func request(_ request: SKRequest, didFailWithError error: Error) {
+        delegate?.purchaseFail(message: NSLocalizedString("failpurchase", comment: ""))
+        print("Error : \(String(describing: error.localizedDescription))")
+    }
+    
+    private func doPurchase(_ product : SKProduct) {
+        // 課金処理開始
+        SKPaymentQueue.default().add(self)
+        SKPaymentQueue.default().add(SKPayment(product: product))
+    }
+    
+    func restore() {
+        // リストア開始
+        SKPaymentQueue.default().add(self)
+        SKPaymentQueue.default().restoreCompletedTransactions()
+    }
+    
+    // 課金処理のステータス更新
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        print("paymentQueue : \(transactions.description)")
-        
-        //課金状態が更新されるたびに呼ばれる
-        for transaction in transactions {
+        for transaction in queue.transactions {
             switch transaction.transactionState {
-            case .purchasing :
-                //課金中
-                break
-            case .purchased :
-                //課金完了
-                self.completeTransaction(transaction)
-                break
-            case .failed :
-                //課金失敗
-                self.failedTransaction(transaction)
-                break
-            case .restored :
-                //リストア
-                self.restoreTransaction(transaction)
-                break
-            case .deferred :
-                //承認待ち
-                self.deferredTransaction(transaction)
+            case .purchased:
+                // 成功処理
+                delegate?.purchaseSuccess(productIdentifier: transaction.payment.productIdentifier)
+                queue.finishTransaction(transaction)
+            case .restored:
+                // リストア成功
+                delegate?.restorePurchase(productIdentifier: transaction.payment.productIdentifier)
+                queue.finishTransaction(transaction)
+            case .deferred:
+                // ファミリー共有待機処理
+                delegate?.purchaseFail(message: NSLocalizedString("failpurchase", comment: ""))
+                print("Error : \(String(describing: transaction.error?.localizedDescription))")
+                queue.finishTransaction(transaction)
+            case .failed:
+                // 処理失敗
+                delegate?.purchaseFail(message: NSLocalizedString("failpurchase", comment: ""))
+                print("Error : \(String(describing: transaction.error?.localizedDescription))")
+                queue.finishTransaction(transaction)
+            case .purchasing:
+                // 処理中
                 break
             }
         }
-    }
-    
-    func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
-        print("paymentQueue restoreCompletedTransactionsFailedWithError")
-        
-        //リストア失敗時に呼ばれる
-        self.delegate?.purchaseManager?(self, didFailWithError: error as NSError!)
-        self.isRestore = false
     }
     
     func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
-        print("paymentQueueRestoreCompletedTransactionsFinished")
-        
-        //リストア完了時に呼ばれる
-        self.delegate?.purchaseManagerDidFinishRestore?(self)
-        self.isRestore = false
+        delegate?.restoreSuccess()
     }
     
-    // MARK: - SKPaymentTransaction process
-    fileprivate func completeTransaction(_ transaction : SKPaymentTransaction) {
-        print("completeTransaction")
-        
-        if transaction.payment.productIdentifier == self.productIdentifier {
-            //課金終了
-            self.delegate?.purchaseManager?(self, didFinishPurchaseWithTransaction: transaction, decisionHandler: { (complete) -> Void in
-                if complete == true {
-                    //トランザクション終了
-                    SKPaymentQueue.default().finishTransaction(transaction)
-                }
-            })
-            self.productIdentifier = nil
-        } else {
-            //課金終了(以前中断された課金処理)
-            self.delegate?.purchaseManager?(self, didFinishUntreatedPurchaseWithTransaction: transaction,
-                                            decisionHandler: { (complete) -> Void in
-                if complete == true {
-                    //トランザクション終了
-                    SKPaymentQueue.default().finishTransaction(transaction)
-                }
-            })
-        }
+    func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
+        delegate?.restoreFail(message: NSLocalizedString("failrestore", comment: ""))
+        print("Error : \(String(describing: error.localizedDescription))")
     }
     
-    fileprivate func failedTransaction(_ transaction : SKPaymentTransaction) {
-        print("failedTransaction")
-        
-        //課金失敗
-        self.delegate?.purchaseManager?(self, didFailWithError: transaction.error as NSError!)
-        self.productIdentifier = nil
-        SKPaymentQueue.default().finishTransaction(transaction)
-    }
-    
-    fileprivate func restoreTransaction(_ transaction : SKPaymentTransaction) {
-        print("restoreTransaction")
-        
-        //リストア(originalTransactionをdidFinishPurchaseWithTransactionで通知)　※設計に応じて変更
-        self.delegate?.purchaseManager?(self, didFinishPurchaseWithTransaction: transaction.original, decisionHandler: { (complete) -> Void in
-            if complete == true {
-                //トランザクション終了
-                SKPaymentQueue.default().finishTransaction(transaction)
-            }
-        })
-    }
-    
-    fileprivate func deferredTransaction(_ transaction : SKPaymentTransaction) {
-        print("deferredTransaction")
-        
-        //承認待ち
-        self.delegate?.purchaseManagerDidDeferred?(self)
-        self.productIdentifier = nil
-    }
 }
 
-@objc protocol PurchaseManagerDelegate {
-    //課金完了
-    @objc optional func purchaseManager(_ purchaseManager: InAppPurchaseManager!,
-                                        didFinishPurchaseWithTransaction transaction: SKPaymentTransaction!,
-                                        decisionHandler: ((_ complete : Bool) -> Void)!)
-    //課金完了(中断していたもの)
-    @objc optional func purchaseManager(_ purchaseManager: InAppPurchaseManager!,
-                                        didFinishUntreatedPurchaseWithTransaction transaction: SKPaymentTransaction!,
-                                        decisionHandler: ((_ complete : Bool) -> Void)!)
-    //リストア完了
-    @objc optional func purchaseManagerDidFinishRestore(_ purchaseManager: InAppPurchaseManager!)
-    //課金失敗
-    @objc optional func purchaseManager(_ purchaseManager: InAppPurchaseManager!, didFailWithError error: NSError!)
-    //承認待ち(ファミリー共有)
-    @objc optional func purchaseManagerDidDeferred(_ purchaseManager: InAppPurchaseManager!)
+protocol PurchaseManagerDelegate {
+    // 購入成功
+    func purchaseSuccess(productIdentifier: String)
+    // 購入失敗
+    func purchaseFail(message: String)
+    // リストア成功
+    func restorePurchase(productIdentifier: String)
+    // リストア成功
+    func restoreSuccess()
+    // リストア失敗
+    func restoreFail(message: String)
 }

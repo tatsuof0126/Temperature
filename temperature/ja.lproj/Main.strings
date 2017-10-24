@@ -7,3 +7,129 @@
 
 /* Class = "UITabBarItem"; title = "Config"; ObjectID = "4vt-rr-xoX"; */
 "4vt-rr-xoX.title" = "設定";
+
+/* Class = "UIButton"; normalTitle = "12月30日(金)"; ObjectID = "07N-ID-U2C"; */
+// "07N-ID-U2C.normalTitle" = "12月30日(金)";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "0M8-ov-1EI"; */
+// "0M8-ov-1EI.text" = "Subtitle";
+
+/* Class = "UIBarButtonItem"; title = "Save"; ObjectID = "2zf-Lg-K1S"; */
+"2zf-Lg-K1S.title" = "保存";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "9v2-iG-Be8"; */
+"9v2-iG-Be8.title" = "戻る";
+
+/* Class = "UISegmentedControl"; Aca-QU-XQi.segmentTitles[0] = "3 days"; ObjectID = "Aca-QU-XQi"; */
+"Aca-QU-XQi.segmentTitles[0]" = "3日間";
+
+/* Class = "UISegmentedControl"; Aca-QU-XQi.segmentTitles[1] = "7 days"; ObjectID = "Aca-QU-XQi"; */
+"Aca-QU-XQi.segmentTitles[1]" = "7日間";
+
+/* Class = "UILabel"; text = "Condition"; ObjectID = "D6i-sc-aZa"; */
+"D6i-sc-aZa.text" = "症状";
+
+/* Class = "UILabel"; text = "Memo"; ObjectID = "D9K-Tw-KJ2"; */
+"D9K-Tw-KJ2.text" = "メモ";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "D9n-jl-sYS"; */
+// "D9n-jl-sYS.text" = "Title";
+
+/* Class = "UINavigationItem"; title = "Graph"; ObjectID = "H3n-5i-qD5"; */
+"H3n-5i-qD5.title" = "体温グラフ";
+
+/* Class = "UINavigationItem"; title = "Config"; ObjectID = "JMG-mM-0v4"; */
+"JMG-mM-0v4.title" = "設定";
+
+/* Class = "UILabel"; text = "Time"; ObjectID = "JUh-jQ-c1U"; */
+"JUh-jQ-c1U.text" = "日時";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "Js8-B8-cm0"; */
+// "Js8-B8-cm0.text" = "Title";
+
+/* Class = "UILabel"; text = "Temperature"; ObjectID = "K7T-ZT-j1i"; */
+"K7T-ZT-j1i.text" = "体温";
+
+/* Class = "UINavigationItem"; title = "Regist Record"; ObjectID = "Let-vC-36n"; */
+"Let-vC-36n.title" = "体温の記録";
+
+/* Class = "UIButton"; normalTitle = "Change"; ObjectID = "OYb-iR-UmF"; */
+"OYb-iR-UmF.normalTitle" = "変更";
+
+/* Class = "UILabel"; text = "Body Temperature Recorder ver1.0.0"; ObjectID = "P4C-il-n29"; */
+// "P4C-il-n29.text" = "Body Temperature Recorder ver1.0.0";
+
+/* Class = "UINavigationItem"; title = "Body Temperature Record"; ObjectID = "Pm1-gW-H0v"; */
+"Pm1-gW-H0v.title" = "体温の記録";
+
+/* Class = "UIButton"; normalTitle = "Clear"; ObjectID = "PyU-23-b3J"; */
+"PyU-23-b3J.normalTitle" = "クリア";
+
+/* Class = "UINavigationItem"; title = "Select Conditions"; ObjectID = "UTY-Sj-fYy"; */
+"UTY-Sj-fYy.title" = "症状を選択";
+
+/* Class = "UINavigationItem"; title = "Purchase Addon"; ObjectID = "Z0F-gV-Mdq"; */
+"Z0F-gV-Mdq.title" = "アドオンを購入";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "but-RM-exw"; */
+"but-RM-exw.text" = "詳細";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "bz2-Kx-2qV"; */
+"bz2-Kx-2qV.title" = "戻る";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "cdG-yo-3Ce"; */
+// "cdG-yo-3Ce.text" = "Title";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "gw7-VJ-iNh"; */
+"gw7-VJ-iNh.title" = "戻る";
+
+/* Class = "UILabel"; text = "2017/08/22 23:30"; ObjectID = "kTO-av-dy5"; */
+// "kTO-av-dy5.text" = "2017/08/22 23:30";
+
+/* Class = "UIButton"; normalTitle = "> >"; ObjectID = "kXf-k9-FQX"; */
+// "kXf-k9-FQX.normalTitle" = "> >";
+
+/* Class = "UILabel"; text = "℃"; ObjectID = "mAx-tr-aae"; */
+// "mAx-tr-aae.text" = "℃";
+
+/* Class = "UIButton"; normalTitle = "Delete"; ObjectID = "mKx-PG-J0a"; */
+"mKx-PG-J0a.normalTitle" = "削除";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "mLa-WE-ZCt"; */
+// "mLa-WE-ZCt.text" = "Title";
+
+/* Class = "UIBarButtonItem"; title = "OK"; ObjectID = "mny-Hv-QLJ"; */
+"mny-Hv-QLJ.title" = "設定";
+
+/* Class = "UIButton"; normalTitle = "< <"; ObjectID = "rGN-aT-zRU"; */
+// "rGN-aT-zRU.normalTitle" = "< <";
+
+/* Class = "UISegmentedControl"; uDB-oj-JDk.segmentTitles[0] = "Last 7days"; ObjectID = "uDB-oj-JDk"; */
+"uDB-oj-JDk.segmentTitles[0]" = "最近7日間";
+
+/* Class = "UISegmentedControl"; uDB-oj-JDk.segmentTitles[1] = "Last 30days"; ObjectID = "uDB-oj-JDk"; */
+"uDB-oj-JDk.segmentTitles[1]" = "最近30日間";
+
+/* Class = "UISegmentedControl"; uDB-oj-JDk.segmentTitles[2] = "All"; ObjectID = "uDB-oj-JDk"; */
+"uDB-oj-JDk.segmentTitles[2]" = "すべて";
+
+/* Class = "UIBarButtonItem"; title = "Add"; ObjectID = "vdi-MN-cwA"; */
+"vdi-MN-cwA.title" = "追加";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "vky-1E-FR3"; */
+"vky-1E-FR3.text" = "詳細";
+
+/* Class = "UIButton"; normalTitle = "Change"; ObjectID = "y71-es-ZR4"; */
+"y71-es-ZR4.normalTitle" = "変更";
+
+/* Class = "UILabel"; text = "Display in Fahrenheit"; ObjectID = "yIu-iv-nOX"; */
+"yIu-iv-nOX.text" = "体温を華氏で表示";
+
+/* Class = "UIBarButtonItem"; title = "Send"; ObjectID = "Xef-ij-iPG"; */
+"Xef-ij-iPG.title" = "送信";
+
+/* Class = "UIBarButtonItem"; title = "Send"; ObjectID = "Fz7-SY-BqI"; */
+"Fz7-SY-BqI.title" = "送信";
+
+/* Class = "UILabel"; text = "Destination of e-mail"; ObjectID = "c5h-bh-3fr"; */
+"c5h-bh-3fr.text" = "メール送信の宛先";

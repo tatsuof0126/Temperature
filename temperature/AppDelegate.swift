@@ -11,13 +11,16 @@ import Firebase
 import GoogleMobileAds
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate, PurchaseManagerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
     
     // 広告を非表示にするならfalse（リリース時はtrue）
     static let SHOW_ADS = true
     
+    // テストデータ作成用（リリース時はfalse）
+    static let MAKE_TEST_DATA = false
+    
     // インタースティシャル広告の表示割合（％）
-    static let SHOW_INTERSTITIAL_RATIO = 25
+    static let SHOW_INTERSTITIAL_RATIO = 35
     
     var window: UIWindow?
     
@@ -38,6 +41,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate, 
         // Conditionが初期化されていなかったら初期データを作る
         if Condition.checkConditionList() == false {
             Condition.makeDefaultConditionList()
+        }
+        
+        if AppDelegate.MAKE_TEST_DATA == true {
+            Temperature.makeTestData()
         }
         
         return true
@@ -80,12 +87,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate, 
     }
     
     func showInterstitial(_ controller: UIViewController) {
+        showInterstitialFlag = false
+
         if(ConfigManager.isShowAds() == false){
             return
         }
         
         let rand = (Int)(arc4random_uniform(100))
-        // print("rand : \(rand)")
+        // print("rand : \(rand) show -> \(rand < AppDelegate.SHOW_INTERSTITIAL_RATIO)")
         if rand >= AppDelegate.SHOW_INTERSTITIAL_RATIO {
             return
         }
@@ -95,7 +104,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate, 
         } else {
             prepareInterstitial()
         }
-        showInterstitialFlag = false
     }
     
     func interstitialDidDismissScreen(_ ad: GADInterstitial) {

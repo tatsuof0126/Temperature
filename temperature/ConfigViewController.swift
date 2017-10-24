@@ -15,15 +15,18 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
     
     @IBOutlet var configTableView: UITableView!
     
+    @IBOutlet var toAddressText: UITextField!
+    
     @IBOutlet var useFahrenheitSwitch: UISwitch!
     
     @IBOutlet var versionLabel: UILabel!
     
-    static let menu = ["removeads"]
-    
+    static let menu = ["goremoveads"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        toAddressText.text = ConfigManager.getToAddress()
         
         useFahrenheitSwitch.isOn = ConfigManager.isUseFahrenheit()
         
@@ -31,16 +34,11 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
         let version: String? = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
         versionLabel.text = NSLocalizedString("appname", comment: "") + " ver" + version!
         
-        
-        
-        
-        
-        
         makeGadBannerView(withTab: true)
     }
  
     override func adViewDidReceiveAd(_ bannerView: GADBannerView){
-        if(gadLoaded == false){
+        if gadLoaded == false && ConfigManager.isShowAds() == true {
             scrollView.frame = CGRect(origin: scrollView.frame.origin,
                                   size: CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height-gadBannerView.frame.size.height))
             self.view.addSubview(gadBannerView)
@@ -51,11 +49,10 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "configcell")
         
-        cell.textLabel?.text = NSLocalizedString(ConfigViewController.menu[indexPath.row], comment: "")
-        
-        if indexPath.row == 0 {
-            // 広告削除アドオンを購入済みなら購入済みと表示
-            cell.detailTextLabel?.text = ConfigManager.isShowAds() ? "" : NSLocalizedString("purchased", comment: "")
+        if ConfigManager.isShowAds() == true {
+            cell.textLabel?.text = NSLocalizedString(ConfigViewController.menu[indexPath.row], comment: "")
+        } else {
+            cell.textLabel?.text = NSLocalizedString("gopurchase", comment: "")
         }
         
         return cell
@@ -69,8 +66,27 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
         performSegue(withIdentifier: "inapppurchase", sender: nil)
     }
     
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == toAddressText {
+            ConfigManager.setToAddress(toAddress: toAddressText.text!)
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        // Returnキーで編集を終わらせる
+        self.view.endEditing(true)
+        return true
+    }
+    
     @IBAction func switchChanged(_ sender: Any) {
         ConfigManager.setUseFahrenheit(useFahrenheit: useFahrenheitSwitch.isOn)
+    }
+    
+    @IBAction func onTap(_ sender: Any) {
+        print("ontap")
+        
+        // 無関係の場所をタップされたら編集を終わらせる
+        self.view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,6 +95,13 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
             configTableView.deselectRow(at: configTableView.indexPathForSelectedRow!, animated: true)
         }
         configTableView.reloadData()
+        
+        if gadLoaded == true && ConfigManager.isShowAds() == false {
+            scrollView.frame = CGRect(origin: scrollView.frame.origin,
+                                      size: CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height+gadBannerView.frame.size.height))
+            gadBannerView.removeFromSuperview()
+            gadLoaded = false
+        }
     }
 
     override func didReceiveMemoryWarning() {

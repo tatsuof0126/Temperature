@@ -7,17 +7,27 @@
 */
 "appname" = "Body Temperature Recorder";
 
-"removeads" = "Remove Ads";
+"goremoveads" = "Remove Ads";
+"gopurchase" = "Purchase Addon";
 
 "purchased" = "Purchased";
 
 "purchaseaddon" = "Purchase Addon";
 
-"removeads2" = "Remove Ads";
+"removeads" = "Remove Ads";
 
 "purchaseduser" = "Purchased User";
 
 "restoreaddon" = "Restore Purchased Addon";
+
+"completepurchase" = "Purchased Addon";
+"donerestore" = "Purchased Addon";
+"completerestore" = "Restore Purchased Addon";
+"removedads" = "Ads no longer appear";
+
+"notallowedpurchase" = "Purchase in the application is not permitted. Check the setting.";
+"failpurchase" = "Failed to purchase. Check the setting.";
+"failrestore" = "Failed to restore. Check the setting.";
 
 "withmemo" = "[with Memo]";
 
@@ -28,3 +38,18 @@
 
 "noinput" = "Need to input";
 "invalidtemperature" = "Invalid Temperature";
+
+"sendrecord" = "Send a body temperature record";
+"sendgraph" = "Send a body temperature graph";
+"selectmethod" = "Select a send method";
+"sendbyline" = "Send by LINE";
+"sendbymail" = "Send by E-mail";
+"sendfailline" = "Sending failed. Please check if LINE is installed.";
+"sendfailmail" = "Sending failed. Please check the setting of the mail application.";
+"sendcomplete" = "Send complete";
+
+"recordmailsubject" = "Body Temperature Record";
+"recordmailbody" = "Send by Body Temperature Recorder";
+
+"graphmailsubject" = "Body Temperature Graph";
+"graphmailbody" = "Send by Body Temperature Recorder";

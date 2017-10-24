@@ -26,6 +26,7 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
     
     @IBOutlet var memoText: UITextView!
     
+    @IBOutlet var conditionChangeBtn: UIButton!
     @IBOutlet var conditionClearBtn: UIButton!
     @IBOutlet var deleteBtn: UIButton!
     
@@ -76,7 +77,7 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
         }
         
         // 症状
-        setConditionString()
+        showCondition()
         
         // メモ
         memoText.text = temperature.memo
@@ -85,6 +86,19 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
         memoText.layer.borderWidth = 1
         memoText.layer.borderColor = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0).cgColor
         memoText.layer.cornerRadius = 8
+        
+        // 日本語と英語で場所を微調整
+        if Utility.isJapaneseLocale() {
+            temperatureText.frame = CGRect(x: 95, y: 61, width: 70, height: 30)
+            unitsLabel.frame = CGRect(x: 171, y: 66, width: 20, height: 21)
+            conditionChangeBtn.frame = CGRect(x: 90, y: 105, width: 60, height: 30)
+            conditionClearBtn.frame = CGRect(x: 160, y: 105, width: 60, height: 30)
+        } else {
+            temperatureText.frame = CGRect(x: 135, y: 61, width: 70, height: 30)
+            unitsLabel.frame = CGRect(x: 211, y: 66, width: 20, height: 21)
+            conditionChangeBtn.frame = CGRect(x: 110, y: 105, width: 60, height: 30)
+            conditionClearBtn.frame = CGRect(x: 180, y: 105, width: 60, height: 30)
+        }
         
         scrollView.contentSize = CGSize(width: 320, height: 680)
         
@@ -116,7 +130,7 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
     
     @IBAction func conditionClearButton(_ sender: Any) {
         conditionList = List<TemperatureCondition>()
-        setConditionString()
+        showCondition()
     }
     
     @IBAction func saveButton(_ sender: Any) {
@@ -188,9 +202,6 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
         }
         
         datePicker.date = temperatureDate
-        
-        // TODO ピッカーに現在時刻に合わせる機能をつける？
-        
         
         // ピッカーをアニメーションで表示
         pickerBaseView.isHidden = false
@@ -295,14 +306,14 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        setConditionString()
+        showCondition()
     }
 
     func setTemperatureDate(){
         timeLabel.text = Temperature.getTemperatureDateString(date: temperatureDate)
     }
     
-    func setConditionString() {
+    func showCondition() {
         conditionText.text = Temperature.getConditionString(conditionList: conditionList)
         
         if conditionList.count == 0 {
@@ -331,6 +342,9 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
         
         memoTitle.frame.origin = CGPoint(x: 20, y: 155+adjustHeight-20)
         memoText.frame.origin = CGPoint(x: 20, y: 180+adjustHeight-20)
+        
+        // Deleteボタンの場所を調整
+        deleteBtn.frame.origin = CGPoint(x: 245, y: 300+adjustHeight-20)
     }
     
     override func didReceiveMemoryWarning() {

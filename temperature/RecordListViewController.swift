@@ -7,14 +7,17 @@
 //
 
 import UIKit
+import MessageUI
 import GoogleMobileAds
 import RealmSwift
 
-class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UITableViewDataSource {
+class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate {
     
     @IBOutlet var segmentedControl: UISegmentedControl!
     
     @IBOutlet var tableView: UITableView!
+    
+    @IBOutlet var baseView: UIView!
     
     var temperatureList: Results<Temperature>!
     
@@ -43,7 +46,10 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
     }
     
     override func adViewDidReceiveAd(_ bannerView: GADBannerView){
-        if(gadLoaded == false){
+        if gadLoaded == false && ConfigManager.isShowAds() == true {
+            baseView.frame = CGRect(origin: baseView.frame.origin,
+                                     size: CGSize(width: baseView.frame.size.width, height: baseView.frame.size.height-gadBannerView.frame.size.height))
+            
             tableView.frame = CGRect(origin: tableView.frame.origin,
                                   size: CGSize(width: tableView.frame.size.width, height: tableView.frame.size.height-gadBannerView.frame.size.height))
         
@@ -95,6 +101,90 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
         tableView.reloadData()
     }
     
+    
+    @IBAction func sendButton(_ sender: Any) {
+        let alert = UIAlertController(title: NSLocalizedString("sendrecord", comment: ""),
+                                      message: NSLocalizedString("selectmethod", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
+        
+        let action1 = UIAlertAction(title: NSLocalizedString("sendbyline", comment: ""), style: UIAlertActionStyle.default, handler: {
+            (action: UIAlertAction!) in
+            self.sendToLine()
+        })
+        
+        let action2 = UIAlertAction(title: NSLocalizedString("sendbymail", comment: ""), style: UIAlertActionStyle.default, handler: {
+            (action: UIAlertAction!) in
+            self.sendToMail()
+        })
+        
+        let cancel = UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: UIAlertActionStyle.cancel, handler: nil)
+        
+        alert.addAction(action1)
+        alert.addAction(action2)
+        alert.addAction(cancel)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    func sendToLine(){
+        // LINEに送る画像を取得（TableViewの内容）
+        let image = baseView.getScreenShot()
+        
+        let pasteBoard = UIPasteboard.general
+        pasteBoard.image = image
+
+        let lineSchemeImage = "line://msg/image/%@"
+        let scheme = String(format: lineSchemeImage, pasteBoard.name as CVarArg)
+        let sendURL: URL! = URL(string: scheme)
+        
+        if UIApplication.shared.canOpenURL(sendURL) {
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(sendURL, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(sendURL)
+            }
+        } else {
+            Utility.showAlert(controller: self, title: "",
+                              message: NSLocalizedString("sendfailline", comment: ""))
+        }
+    }
+    
+    func sendToMail() {
+        if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            
+            mail.setToRecipients([ConfigManager.getToAddress()])
+            mail.setSubject(NSLocalizedString("recordmailsubject", comment: ""))
+            mail.setMessageBody(NSLocalizedString("recordmailbody", comment: ""), isHTML: false)
+            
+            let image = baseView.getScreenShot()
+            let imageData = UIImageJPEGRepresentation(image, 1.0)!
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMdd"
+            let mmdd = dateFormatter.string(from: Date())
+            let filename = "temperaturerecord"+mmdd+".png"
+            
+            mail.addAttachmentData(imageData, mimeType: "image/png", fileName: filename)
+            
+            present(mail, animated: true, completion: nil)
+        } else {
+            Utility.showAlert(controller: self, title: "",
+                              message: NSLocalizedString("sendfailmail", comment: ""))
+        }
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                               didFinishWith result: MFMailComposeResult, error: Error?) {
+        dismiss(animated: true, completion: nil)
+        
+        if result == .sent {
+            Utility.showAlert(controller: self, title: "",
+                              message: NSLocalizedString("sendcomplete", comment: ""))
+        }
+    }
+    
     @IBAction func addButton(_ sender: Any) {
         performSegue(withIdentifier: "addrecord", sender: nil)
     }
@@ -114,6 +204,17 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if gadLoaded == true && ConfigManager.isShowAds() == false {
+            baseView.frame = CGRect(origin: baseView.frame.origin,
+                                     size: CGSize(width: baseView.frame.size.width,
+                                                  height: baseView.frame.size.height+gadBannerView.frame.size.height))
+            tableView.frame = CGRect(origin: tableView.frame.origin,
+                                      size: CGSize(width: tableView.frame.size.width,
+                                                   height: tableView.frame.size.height+gadBannerView.frame.size.height))
+            gadBannerView.removeFromSuperview()
+            gadLoaded = false
+        }
         
         if (tableView.indexPathForSelectedRow != nil) {
             tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)

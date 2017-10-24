@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  temperature
+
+  Created by 藤原 達郎 on 2017/09/24.
+  Copyright © 2017年 Tatsuo Fujiwara. All rights reserved.
+*/
+
+CFBundleDisplayName = "熱はかった？";

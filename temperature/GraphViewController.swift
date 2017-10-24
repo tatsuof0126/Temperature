@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import MessageUI
 import GoogleMobileAds
 
-class GraphViewController: CommonAdsViewController {
+class GraphViewController: CommonAdsViewController, MFMailComposeViewControllerDelegate {
     
     @IBOutlet var scrollView: UIScrollView!
     
@@ -46,7 +47,7 @@ class GraphViewController: CommonAdsViewController {
     }
     
     override func adViewDidReceiveAd(_ bannerView: GADBannerView){
-        if(gadLoaded == false){
+        if gadLoaded == false && ConfigManager.isShowAds() == true {
             scrollView.frame = CGRect(origin: scrollView.frame.origin,
                                   size: CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height-gadBannerView.frame.size.height))
         
@@ -55,13 +56,92 @@ class GraphViewController: CommonAdsViewController {
         }
     }
     
+    @IBAction func sendButton(_ sender: Any) {
+        let alert = UIAlertController(title: NSLocalizedString("sendgraph", comment: ""),
+                                      message: NSLocalizedString("selectmethod", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
+        
+        let action1 = UIAlertAction(title: NSLocalizedString("sendbyline", comment: ""), style: UIAlertActionStyle.default, handler: {
+            (action: UIAlertAction!) in
+            self.sendToLine()
+        })
+        
+        let action2 = UIAlertAction(title: NSLocalizedString("sendbymail", comment: ""), style: UIAlertActionStyle.default, handler: {
+            (action: UIAlertAction!) in
+            self.sendToMail()
+        })
+        
+        let cancel = UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: UIAlertActionStyle.cancel, handler: nil)
+        
+        alert.addAction(action1)
+        alert.addAction(action2)
+        alert.addAction(cancel)
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func sendToLine(){
+        // LINEに送る画像を取得（GraphViewの内容）
+        let image = graphView.getScreenShot()
+        
+        let pasteBoard = UIPasteboard.general
+        pasteBoard.image = image
+        
+        let lineSchemeImage = "line://msg/image/%@"
+        let scheme = String(format: lineSchemeImage, pasteBoard.name as CVarArg)
+        let sendURL: URL! = URL(string: scheme)
+        
+        if UIApplication.shared.canOpenURL(sendURL) {
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(sendURL, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(sendURL)
+            }
+        } else {
+            Utility.showAlert(controller: self, title: "",
+                              message: NSLocalizedString("sendfailline", comment: ""))
+        }
+    }
+    
+    func sendToMail() {
+        if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            
+            mail.setToRecipients([ConfigManager.getToAddress()])
+            mail.setSubject(NSLocalizedString("graphmailsubject", comment: ""))
+            mail.setMessageBody(NSLocalizedString("graphmailbody", comment: ""), isHTML: false)
+            
+            let image = graphView.getScreenShot()
+            let imageData = UIImageJPEGRepresentation(image, 1.0)!
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMdd"
+            let mmdd = dateFormatter.string(from: Date())
+            let filename = "temperaturegraph"+mmdd+".png"
+            
+            mail.addAttachmentData(imageData, mimeType: "image/png", fileName: filename)
+            
+            present(mail, animated: true, completion: nil)
+        } else {
+            Utility.showAlert(controller: self, title: "",
+                              message: NSLocalizedString("sendfailmail", comment: ""))
+        }
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                               didFinishWith result: MFMailComposeResult, error: Error?) {
+        dismiss(animated: true, completion: nil)
+
+        if result == .sent {
+            Utility.showAlert(controller: self, title: "",
+                              message: NSLocalizedString("sendcomplete", comment: ""))
+        }
+    }
     
     @IBAction func dateBackButton(_ sender: Any) {
         baseDate = Date(timeInterval: 60*60*24*(-1), since: baseDate)
         baseDateBtn.setTitle(GraphViewController.getDateString(date: baseDate), for: .normal)
 
-        print("dateBackButton : \(baseDate.description)")
-        
         showGraphView()
     }
     
@@ -69,8 +149,6 @@ class GraphViewController: CommonAdsViewController {
         baseDate = Date(timeInterval: 60*60*24*(1), since: baseDate)
         baseDateBtn.setTitle(GraphViewController.getDateString(date: baseDate), for: .normal)
 
-        print("dateForwardButton : \(baseDate.description)")
-        
         showGraphView()
     }
     
@@ -116,10 +194,6 @@ class GraphViewController: CommonAdsViewController {
         }
     }
     
-
-    
-    
-    
     @IBAction func pickerDoneButton(_ sender: Any) {
         baseDate = datePicker.date
         baseDateBtn.setTitle(GraphViewController.getDateString(date: baseDate), for: .normal)
@@ -135,9 +209,6 @@ class GraphViewController: CommonAdsViewController {
     
     @IBAction func segmentedControlChanged(_ sender: Any) {
         ConfigManager.setGraphRangeType(graphRangeType: segmentedControl.selectedSegmentIndex)
-        
-        print("segmentedControlChanged")
-
         showGraphView()
     }
     
@@ -162,6 +233,13 @@ class GraphViewController: CommonAdsViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if gadLoaded == true && ConfigManager.isShowAds() == false {
+            scrollView.frame = CGRect(origin: scrollView.frame.origin,
+                                      size: CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height+gadBannerView.frame.size.height))
+            gadBannerView.removeFromSuperview()
+            gadLoaded = false
+        }
         
         showGraphView()
     }
