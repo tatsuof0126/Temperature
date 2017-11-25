@@ -28,6 +28,10 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
         
         toAddressText.text = ConfigManager.getToAddress()
         
+        if Utility.isJapaneseLocale() {
+            toAddressText.placeholder = "メールアドレスを入力"
+        }
+        
         useFahrenheitSwitch.isOn = ConfigManager.isUseFahrenheit()
         
         // アプリ名とバージョンの表示

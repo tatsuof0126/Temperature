@@ -133,3 +133,9 @@
 
 /* Class = "UILabel"; text = "Destination of e-mail"; ObjectID = "c5h-bh-3fr"; */
 "c5h-bh-3fr.text" = "メール送信の宛先";
+
+/* Class = "UILabel"; text = "「追加」ボタンを押して、"; ObjectID = "MLr-k7-Pv9"; */
+"MLr-k7-Pv9.text" = "「追加」ボタンを押して、";
+
+/* Class = "UILabel"; text = "体温の記録を登録してください"; ObjectID = "yle-OU-rKe"; */
+"yle-OU-rKe.text" = "体温の記録を登録してください";

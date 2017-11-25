@@ -39,6 +39,7 @@
 "noinput" = "体温、症状、メモのどれかは入力する必要があります。";
 "invalidtemperature" = "体温の入力が不正です。";
 
+"sendrecord" = "体温の記録を送信";
 "sendgraph" = "体温グラフを送信";
 "selectmethod" = "送信方法を選んでください";
 "sendbyline" = "LINEで送る";

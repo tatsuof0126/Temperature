@@ -11,21 +11,21 @@ import RealmSwift
 
 class Temperature: Object {
     
-    dynamic var id: String = ""
+    @objc dynamic var id: String = ""
     
-    dynamic var personId: Int = 1
+    @objc dynamic var personId: Int = 1
     
-    dynamic var date: Date = Date()
+    @objc dynamic var date: Date = Date()
     
-    dynamic var temperature: Double = 0.0
+    @objc dynamic var temperature: Double = 0.0
     
-    dynamic var useAntipyretic: Bool = false
+    @objc dynamic var useAntipyretic: Bool = false
     
-    dynamic var useFahrenheit: Bool = false
+    @objc dynamic var useFahrenheit: Bool = false
     
     var conditionList = List<TemperatureCondition>()
     
-    dynamic var memo: String = ""
+    @objc dynamic var memo: String = ""
     
     static func makeTestData(){
         let temperatureList = Temperature.getAllTemperature(ascending: false)
@@ -238,10 +238,10 @@ class Temperature: Object {
     
     func getTemperatureNSAttributedString() -> NSAttributedString {
         // 摂氏38.0度、華氏100.0度以上なら赤字にする
-        var attr = [NSForegroundColorAttributeName: UIColor.black]
+        var attr = [NSAttributedStringKey.foregroundColor: UIColor.black]
         if (useFahrenheit == false && temperature >= 38.0) ||
             (useFahrenheit == true && temperature >= 100.0){
-            attr = [NSForegroundColorAttributeName: UIColor.red]
+            attr = [NSAttributedStringKey.foregroundColor: UIColor.red]
         }
         return NSAttributedString(string: getTemperatureString(withUnit: true), attributes: attr)
     }

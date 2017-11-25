@@ -61,8 +61,8 @@ class TemperatureGraphView: UIView {
                 (pointY: 305, string: "35.0")
             ]
         let tempAttr = [
-            NSForegroundColorAttributeName : UIColor.black,
-            NSFontAttributeName : UIFont.systemFont(ofSize: 12),
+            NSAttributedStringKey.foregroundColor : UIColor.black,
+            NSAttributedStringKey.font : UIFont.systemFont(ofSize: 12),
         ]
         
         for (pointY, string) in memoriYInfo {
@@ -102,8 +102,8 @@ class TemperatureGraphView: UIView {
         
         // X軸のラベル
         let dayAttr = [
-            NSForegroundColorAttributeName : UIColor.black,
-            NSFontAttributeName : UIFont.systemFont(ofSize: 13),
+            NSAttributedStringKey.foregroundColor : UIColor.black,
+            NSAttributedStringKey.font : UIFont.systemFont(ofSize: 13),
         ]
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M/d"
@@ -113,9 +113,9 @@ class TemperatureGraphView: UIView {
         for _ in 0 ..< range {
             let dateStr = dateFormatter.string(from: date)
             var adjustX = 0
-            if dateStr.characters.count == 3 {
+            if dateStr.count == 3 {
                 adjustX = 6
-            } else if dateStr.characters.count == 4 {
+            } else if dateStr.count == 4 {
                 adjustX = 3
             }
             

@@ -11,9 +11,9 @@ import RealmSwift
 
 class TemperatureCondition : Object {
     
-    dynamic var id : Int = 0
-    dynamic var langage : Int = 0
-    dynamic var condition : String = ""
+    @objc dynamic var id : Int = 0
+    @objc dynamic var langage : Int = 0
+    @objc dynamic var condition : String = ""
     
     
     

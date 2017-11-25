@@ -11,10 +11,10 @@ import RealmSwift
 
 class Condition: Object {
     
-    dynamic var id: Int = 0
-    dynamic var langage: Int = 0
-    dynamic var condition: String = ""
-    dynamic var order: Int = 0
+    @objc dynamic var id: Int = 0
+    @objc dynamic var langage: Int = 0
+    @objc dynamic var condition: String = ""
+    @objc dynamic var order: Int = 0
     
     convenience init(id: Int, langage: Int, condition: String, order: Int) {
         self.init()

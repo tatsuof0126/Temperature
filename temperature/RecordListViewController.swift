@@ -19,6 +19,9 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
     
     @IBOutlet var baseView: UIView!
     
+    @IBOutlet var infoLabel1: UILabel!
+    @IBOutlet var infoLabel2: UILabel!
+    
     var temperatureList: Results<Temperature>!
     
     override func viewDidLoad() {
@@ -27,8 +30,6 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
         segmentedControl.selectedSegmentIndex = ConfigManager.getRecordListType()
         
         // TODO 複数人対応？
-        
-        // loadTemperatureData()
         
         makeGadBannerView(withTab: true)
     }
@@ -98,9 +99,19 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
     @IBAction func segmentedControlChanged(_ sender: Any) {
         ConfigManager.setRecordListType(recordListType: segmentedControl.selectedSegmentIndex)
         loadTemperatureData()
+        showInfoLabel()
         tableView.reloadData()
     }
     
+    func showInfoLabel() {
+        if temperatureList.count == 0 {
+            infoLabel1.isHidden = false;
+            infoLabel2.isHidden = false;
+        } else {
+            infoLabel1.isHidden = true;
+            infoLabel2.isHidden = true;
+        }
+    }
     
     @IBAction func sendButton(_ sender: Any) {
         let alert = UIAlertController(title: NSLocalizedString("sendrecord", comment: ""),
@@ -221,6 +232,7 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
         }
         
         loadTemperatureData()
+        showInfoLabel()
         tableView.reloadData()
     }
 
