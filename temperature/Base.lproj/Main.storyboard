@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -501,6 +501,66 @@
             </objects>
             <point key="canvasLocation" x="468" y="400"/>
         </scene>
+        <!--People-->
+        <scene sceneID="hCb-iM-Eva">
+            <objects>
+                <viewController id="qjr-ip-rYa" customClass="PeopleListViewController" customModule="temperature" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dwF-Pa-twM">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" misplaced="YES" id="5ml-xd-r88">
+                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <navigationItem title="People" id="UTr-2f-ea3">
+                                        <barButtonItem key="leftBarButtonItem" title="Edit" id="Ksn-uu-e42">
+                                            <connections>
+                                                <action selector="editButton:" destination="qjr-ip-rYa" id="4w7-Sq-8FQ"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" title="Add" id="LDh-0m-LnV">
+                                            <connections>
+                                                <action selector="addButton:" destination="qjr-ip-rYa" id="SRU-5J-gbc"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="JD4-V2-azO">
+                                <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="peoplecell" id="Bpr-yX-8CE">
+                                        <rect key="frame" x="0.0" y="55.5" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Bpr-yX-8CE" id="QYh-4N-39J">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="qjr-ip-rYa" id="fdh-1E-a7N"/>
+                                    <outlet property="delegate" destination="qjr-ip-rYa" id="WrU-mf-nJp"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="People" image="people.png" id="7hc-7R-Rah"/>
+                    <connections>
+                        <outlet property="addBtn" destination="LDh-0m-LnV" id="WM3-TR-96B"/>
+                        <outlet property="editBtn" destination="Ksn-uu-e42" id="slF-Ks-TIT"/>
+                        <outlet property="tableView" destination="JD4-V2-azO" id="6pT-TM-a3i"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Tc-71-h4H" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="906" y="1218"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="hVn-Dh-gtf">
             <objects>
@@ -649,7 +709,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="0.0" y="1061"/>
+            <point key="canvasLocation" x="0.0" y="1218"/>
         </scene>
         <!--Purchase Addon View Controller-->
         <scene sceneID="K8j-p9-1gZ">
@@ -717,7 +777,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PKv-O9-2Kf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="468" y="1061"/>
+            <point key="canvasLocation" x="468" y="1218"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -732,6 +792,7 @@
                     <connections>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
+                        <segue destination="qjr-ip-rYa" kind="relationship" relationship="viewControllers" id="pap-8d-zUi"/>
                         <segue destination="iuo-aI-ntn" kind="relationship" relationship="viewControllers" id="qpm-Ow-X8p"/>
                     </connections>
                 </tabBarController>
@@ -742,6 +803,7 @@
     </scenes>
     <resources>
         <image name="list.png" width="24" height="24"/>
+        <image name="people.png" width="24" height="24"/>
         <image name="settings.png" width="24" height="24"/>
         <image name="statistics.png" width="24" height="24"/>
     </resources>

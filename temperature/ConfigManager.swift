@@ -63,7 +63,7 @@ class ConfigManager {
     static func getGraphRangeType() -> Int {
         let userDefaults = UserDefaults.standard
         if (userDefaults.object(forKey: "GRAPHRANGETYPE") == nil) {
-            setRecordListType(recordListType: 0)
+            setGraphRangeType(graphRangeType: 0)
         }
         return userDefaults.integer(forKey: "GRAPHRANGETYPE")
     }
@@ -84,6 +84,19 @@ class ConfigManager {
     static func setToAddress(toAddress: String) {
         let userDefaults = UserDefaults.standard
         userDefaults.set(toAddress, forKey: "TOADDRESS")
+    }
+    
+    static func getTargetPersonId() -> Int {
+        let userDefaults = UserDefaults.standard
+        if (userDefaults.object(forKey: "TARGETPERSONID") == nil) {
+            setTargetPersonId(personId: 1)
+        }
+        return userDefaults.integer(forKey: "TARGETPERSONID")
+    }
+    
+    static func setTargetPersonId(personId: Int) {
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(personId, forKey: "TARGETPERSONID")
     }
     
 }

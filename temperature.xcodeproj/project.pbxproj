@@ -28,6 +28,9 @@
 		0B2D146B1F4E782900441AD1 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2D146A1F4E782900441AD1 /* Utility.swift */; };
 		0B2D146D1F4E7F4B00441AD1 /* SelectConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2D146C1F4E7F4B00441AD1 /* SelectConditionsViewController.swift */; };
 		0B2D14701F50945F00441AD1 /* PurchaseAddonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2D146F1F50945F00441AD1 /* PurchaseAddonViewController.swift */; };
+		0B616FE020387D87003A4AB4 /* PeopleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B616FDF20387D87003A4AB4 /* PeopleListViewController.swift */; };
+		0B616FE220387F07003A4AB4 /* people@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B616FE120387F06003A4AB4 /* people@2x.png */; };
+		0B616FE420388268003A4AB4 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B616FE320388268003A4AB4 /* Person.swift */; };
 		0B63D0B21F5DA0A10084398C /* TemperatureCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B63D0B11F5DA0A10084398C /* TemperatureCondition.swift */; };
 		0B63D0B41F6AC7380084398C /* TemperatureGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B63D0B31F6AC7370084398C /* TemperatureGraphView.swift */; };
 		0B63D0B61F7416510084398C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B63D0B51F7416510084398C /* StoreKit.framework */; };
@@ -64,6 +67,9 @@
 		0B2D146A1F4E782900441AD1 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		0B2D146C1F4E7F4B00441AD1 /* SelectConditionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectConditionsViewController.swift; sourceTree = "<group>"; };
 		0B2D146F1F50945F00441AD1 /* PurchaseAddonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PurchaseAddonViewController.swift; sourceTree = "<group>"; };
+		0B616FDF20387D87003A4AB4 /* PeopleListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleListViewController.swift; sourceTree = "<group>"; };
+		0B616FE120387F06003A4AB4 /* people@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "people@2x.png"; path = "images/people@2x.png"; sourceTree = "<group>"; };
+		0B616FE320388268003A4AB4 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		0B63D0B11F5DA0A10084398C /* TemperatureCondition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemperatureCondition.swift; sourceTree = "<group>"; };
 		0B63D0B31F6AC7370084398C /* TemperatureGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemperatureGraphView.swift; sourceTree = "<group>"; };
 		0B63D0B51F7416510084398C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -118,6 +124,7 @@
 				0B2D14531F487FD100441AD1 /* CommonAdsViewController.swift */,
 				0B2D14601F488CB900441AD1 /* RecordListViewController.swift */,
 				0B2D14621F488CCE00441AD1 /* GraphViewController.swift */,
+				0B616FDF20387D87003A4AB4 /* PeopleListViewController.swift */,
 				0B2D14511F48779400441AD1 /* ConfigViewController.swift */,
 				0B2D14641F48939000441AD1 /* InputRecordViewController.swift */,
 				0B2D146C1F4E7F4B00441AD1 /* SelectConditionsViewController.swift */,
@@ -127,6 +134,7 @@
 				0B2D14661F4E671300441AD1 /* Temperature.swift */,
 				0B63D0B11F5DA0A10084398C /* TemperatureCondition.swift */,
 				0B2D14681F4E6C8200441AD1 /* Condition.swift */,
+				0B616FE320388268003A4AB4 /* Person.swift */,
 				0B93D92D1F586B0200E172EA /* ConfigManager.swift */,
 				0BAACACD1F93A08F002BF3E0 /* UIViewExtension.swift */,
 				0B2D146A1F4E782900441AD1 /* Utility.swift */,
@@ -144,6 +152,7 @@
 		0B2D14551F48888100441AD1 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				0B616FE120387F06003A4AB4 /* people@2x.png */,
 				0B2D145A1F488BC200441AD1 /* browser_window@2x.png */,
 				0B2D145B1F488BC200441AD1 /* statistics@2x.png */,
 				0B2D145C1F488BC200441AD1 /* list@2x.png */,
@@ -246,6 +255,7 @@
 				0B2D145D1F488BC200441AD1 /* browser_window@2x.png in Resources */,
 				0B2D14591F4889AE00441AD1 /* settings@2x.png in Resources */,
 				0B2D145F1F488BC200441AD1 /* list@2x.png in Resources */,
+				0B616FE220387F07003A4AB4 /* people@2x.png in Resources */,
 				0B1D20D21F43503D00F81922 /* LaunchScreen.storyboard in Resources */,
 				0B1D20DA1F4351AF00F81922 /* GoogleService-Info.plist in Resources */,
 				0B1D20CF1F43503D00F81922 /* Assets.xcassets in Resources */,
@@ -327,9 +337,11 @@
 				0B2D14631F488CCE00441AD1 /* GraphViewController.swift in Sources */,
 				0B2D146D1F4E7F4B00441AD1 /* SelectConditionsViewController.swift in Sources */,
 				0B63D0B21F5DA0A10084398C /* TemperatureCondition.swift in Sources */,
+				0B616FE420388268003A4AB4 /* Person.swift in Sources */,
 				0BAACACE1F93A08F002BF3E0 /* UIViewExtension.swift in Sources */,
 				0B2D14651F48939000441AD1 /* InputRecordViewController.swift in Sources */,
 				0B1D20C61F43503D00F81922 /* AppDelegate.swift in Sources */,
+				0B616FE020387D87003A4AB4 /* PeopleListViewController.swift in Sources */,
 				0B63D0B41F6AC7380084398C /* TemperatureGraphView.swift in Sources */,
 				0B2D14521F48779400441AD1 /* ConfigViewController.swift in Sources */,
 				0B2D14671F4E671300441AD1 /* Temperature.swift in Sources */,

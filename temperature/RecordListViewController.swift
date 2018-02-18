@@ -29,7 +29,16 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
         
         segmentedControl.selectedSegmentIndex = ConfigManager.getRecordListType()
         
-        // TODO 複数人対応？
+        // Personが空だったら作る
+        let personList = Person.getPersonList()
+        if personList.count == 0 {
+            Person.makeDefaultPerson()
+        }
+        
+        // TODO ヘッダーに名前を出す
+        
+        
+        
         
         makeGadBannerView(withTab: true)
     }
