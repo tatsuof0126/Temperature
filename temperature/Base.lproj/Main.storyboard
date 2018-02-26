@@ -91,7 +91,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="to record your body temperature." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yle-OU-rKe">
-                                <rect key="frame" x="40" y="175" width="331" height="30"/>
+                                <rect key="frame" x="40" y="175" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -114,6 +114,7 @@
                         <outlet property="baseView" destination="VPi-vm-7mn" id="efQ-Q1-yCt"/>
                         <outlet property="infoLabel1" destination="MLr-k7-Pv9" id="Qhn-Ik-dQ8"/>
                         <outlet property="infoLabel2" destination="yle-OU-rKe" id="dNg-Bt-wLb"/>
+                        <outlet property="naviItem" destination="Pm1-gW-H0v" id="A8w-pr-2fo"/>
                         <outlet property="segmentedControl" destination="uDB-oj-JDk" id="jyq-qh-5fQ"/>
                         <outlet property="tableView" destination="UW6-jz-txr" id="uZv-3C-grJ"/>
                         <segue destination="KUY-Hz-ufO" kind="modal" identifier="addrecord" modalTransitionStyle="crossDissolve" id="uLy-pV-j70"/>
@@ -492,6 +493,7 @@
                         <outlet property="baseDateBtn" destination="07N-ID-U2C" id="2hw-Xz-nOU"/>
                         <outlet property="datePicker" destination="KKQ-He-UwD" id="X4e-0l-eeY"/>
                         <outlet property="graphView" destination="RWr-hb-cXs" id="h0a-BR-eMd"/>
+                        <outlet property="naviItem" destination="H3n-5i-qD5" id="7VH-hj-QMa"/>
                         <outlet property="pickerBaseView" destination="v8Z-kQ-Wuw" id="lRW-OH-nv5"/>
                         <outlet property="scrollView" destination="nx2-au-Vn4" id="BOd-GR-Leg"/>
                         <outlet property="segmentedControl" destination="Aca-QU-XQi" id="M8M-Zn-GO3"/>
@@ -547,6 +549,22 @@
                                     <outlet property="delegate" destination="qjr-ip-rYa" id="WrU-mf-nJp"/>
                                 </connections>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" id="iAK-ko-D43">
+                                <rect key="frame" x="20" y="360" width="280" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <string key="text">People can be switched by swiping
+</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text=" in &quot;Record&quot; or &quot;Graph&quot; screen." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" id="l9U-Ba-1nf">
+                                <rect key="frame" x="20" y="385" width="280" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -554,6 +572,8 @@
                     <connections>
                         <outlet property="addBtn" destination="LDh-0m-LnV" id="WM3-TR-96B"/>
                         <outlet property="editBtn" destination="Ksn-uu-e42" id="slF-Ks-TIT"/>
+                        <outlet property="infoLabel1" destination="iAK-ko-D43" id="FcK-hS-bsb"/>
+                        <outlet property="infoLabel2" destination="l9U-Ba-1nf" id="LPg-Bc-lz4"/>
                         <outlet property="tableView" destination="JD4-V2-azO" id="6pT-TM-a3i"/>
                     </connections>
                 </viewController>
@@ -684,6 +704,13 @@
                                             <outlet property="delegate" destination="iuo-aI-ntn" id="GBU-eh-nwN"/>
                                         </connections>
                                     </textField>
+                                    <label opaque="NO" tag="9" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Other Apps" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="298-U9-5pt">
+                                        <rect key="frame" x="180" y="340" width="120" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -694,6 +721,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Config" image="settings.png" id="4vt-rr-xoX"/>
                     <connections>
+                        <outlet property="appStoreLabel" destination="298-U9-5pt" id="cqR-Qn-YKa"/>
                         <outlet property="configTableView" destination="JKu-iM-88j" id="Pnz-N5-u4o"/>
                         <outlet property="scrollView" destination="35J-Oa-tXO" id="t8r-lV-VVG"/>
                         <outlet property="toAddressText" destination="XUM-2D-GGy" id="tW9-HQ-OJV"/>

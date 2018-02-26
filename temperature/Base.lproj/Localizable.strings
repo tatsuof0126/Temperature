@@ -33,6 +33,11 @@
 
 "ok" = "OK";
 "cancel" = "Cancel";
+"edit" = "Edit";
+"done" = "Done";
+
+"bodytemperature" = "Body Temperature";
+"graph" = "Graph";
 
 "deleteconfirm" = "Delete the record. Is it OK?";
 
@@ -53,3 +58,9 @@
 
 "graphmailsubject" = "Body Temperature Graph";
 "graphmailbody" = "Send by Body Temperature Recorder";
+
+"addperson" = "Add Person";
+"addpersonbody" = "Please enter the name";
+"editperson" = "Edit Name";
+"editpersonbody" = "Please enter the name";
+"deletepersonbody" = "Delete all of [%@]'s data. Is it OK?";

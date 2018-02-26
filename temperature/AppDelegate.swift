@@ -22,6 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
     // インタースティシャル広告の表示割合（％）
     static let SHOW_INTERSTITIAL_RATIO = 35
     
+    // レビュー依頼ダイアログの表示割合（％）
+    static let SHOW_REQUESTREVIEW_RATIO = 4
+    
     var window: UIWindow?
     
     var gadInterstitial: GADInterstitial!
@@ -75,7 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
     // アプリID: ca-app-pub-6719193336347757~1520777841
     // 広告ユニットID（インタースティシャル）: ca-app-pub-6719193336347757/6784712819
     // 広告ユニットID（バナー）: ca-app-pub-6719193336347757/2047391454
-    
     func prepareInterstitial() {
         // gadInterstitial = GADInterstitial(adUnitID: "ca-app-pub-3940256099942544/4411468910") // テスト用
         gadInterstitial = GADInterstitial(adUnitID: "ca-app-pub-6719193336347757/6784712819")
@@ -86,23 +88,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
         gadInterstitial.load(gadRequest)
     }
     
-    func showInterstitial(_ controller: UIViewController) {
+    func showInterstitial(_ controller: UIViewController) -> Bool {
         showInterstitialFlag = false
-
+        
         if(ConfigManager.isShowAds() == false){
-            return
+            return false
         }
         
         let rand = (Int)(arc4random_uniform(100))
         // print("rand : \(rand) show -> \(rand < AppDelegate.SHOW_INTERSTITIAL_RATIO)")
         if rand >= AppDelegate.SHOW_INTERSTITIAL_RATIO {
-            return
+            return false
         }
         
         if gadInterstitial.isReady {
             gadInterstitial?.present(fromRootViewController: controller)
+            return true
         } else {
             prepareInterstitial()
+            return false
         }
     }
     
@@ -141,4 +145,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
         // print("interstitialWillLeaveApplication")
     }
     
+    static func requestReview() {
+        let rand = (Int)(arc4random_uniform(100))
+        print("rand : \(rand) show -> \(rand < AppDelegate.SHOW_REQUESTREVIEW_RATIO)")
+        if rand >= AppDelegate.SHOW_REQUESTREVIEW_RATIO {
+            return
+        }
+        
+        if #available(iOS 10.3, *) {
+            SKStoreReviewController.requestReview()
+        }
+    }
+
 }

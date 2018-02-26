@@ -21,6 +21,8 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
     
     @IBOutlet var versionLabel: UILabel!
     
+    @IBOutlet var appStoreLabel: UILabel!
+    
     static let menu = ["goremoveads"]
     
     override func viewDidLoad() {
@@ -37,6 +39,10 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
         // アプリ名とバージョンの表示
         let version: String? = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
         versionLabel.text = NSLocalizedString("appname", comment: "") + " ver" + version!
+        
+        // 他のアプリへのリンク
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(onLinkTap))
+        appStoreLabel.addGestureRecognizer(tapGestureRecognizer)
         
         makeGadBannerView(withTab: true)
     }
@@ -93,6 +99,13 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
         self.view.endEditing(true)
     }
     
+    @objc func onLinkTap(gestureRecognizer: UITapGestureRecognizer) {
+        let itunesURL:String = "itms-apps://itunes.apple.com/developer/tatsuo-fujiwara/id578136106"
+        let url = URL(string:itunesURL)
+        let app:UIApplication = UIApplication.shared
+        app.openURL(url!)
+    }
+        
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if (configTableView.indexPathForSelectedRow != nil) {

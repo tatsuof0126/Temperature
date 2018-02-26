@@ -24,24 +24,35 @@ class GraphViewController: CommonAdsViewController, MFMailComposeViewControllerD
     
     @IBOutlet var datePicker: UIDatePicker!
     
+    @IBOutlet var naviItem: UINavigationItem!
+    
     var baseDate = Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // テストコード
-        // scrollView.backgroundColor = UIColor.cyan
         
         segmentedControl.selectedSegmentIndex = ConfigManager.getGraphRangeType()
         
         baseDate = Date()
         baseDateBtn.setTitle(GraphViewController.getDateString(date: baseDate), for: .normal)
         
+        // 画面タイトルに名前を表示
+        showNaviItem()
+        
         // グラフを描画
         showGraphView()
         
         // ピッカーの初期化（非表示にして画面下に配置）
         closePicker()
+        
+        // 画面のスワイプ設定
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(RecordListViewController.didSwipe(sender:)))
+        rightSwipe.direction = .right
+        scrollView.addGestureRecognizer(rightSwipe)
+        
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(RecordListViewController.didSwipe(sender:)))
+        leftSwipe.direction = .left
+        scrollView.addGestureRecognizer(leftSwipe)
         
         makeGadBannerView(withTab: true)
     }
@@ -54,6 +65,56 @@ class GraphViewController: CommonAdsViewController, MFMailComposeViewControllerD
             self.view.addSubview(gadBannerView)
             gadLoaded = true
         }
+    }
+    
+    func showNaviItem(){
+        let personList = Person.getPersonList()
+        if personList.count >= 2 || (personList.first?.name != Person.DEFAULT_NAME_GLOBAL && personList.first?.name !=  Person.DEFAULT_NAME_JAPAN ) {
+            let person = Person.getPerson(personId: ConfigManager.getTargetPersonId())
+            if Utility.isJapaneseLocale() && person.name != Person.DEFAULT_NAME_JAPAN {
+                naviItem.title = person.name + "さん"
+            } else {
+                naviItem.title = person.name
+            }
+        } else {
+            naviItem.title = NSLocalizedString("graph", comment: "")
+        }
+    }
+    
+    @objc func didSwipe(sender: UISwipeGestureRecognizer) {
+        let personList = Person.getPersonList()
+        let targetPersonId = ConfigManager.getTargetPersonId()
+        var targetPersonIndex = -99
+        
+        for (i, person) in personList.enumerated() {
+            if person.id == targetPersonId {
+                targetPersonIndex = i
+            }
+        }
+        
+        if personList.count <= 1 || targetPersonIndex == -99 {
+            return
+        }
+        
+        var changed = false
+        if sender.direction == .left {
+            if targetPersonIndex < (personList.count-1) {
+                targetPersonIndex += 1
+                changed = true
+            }
+        } else if sender.direction == .right {
+            if targetPersonIndex > 0 {
+                targetPersonIndex -= 1
+                changed = true
+            }
+        }
+        
+        if changed == true {
+            ConfigManager.setTargetPersonId(personId: personList[targetPersonIndex].id)
+            showNaviItem()
+            showGraphView()
+        }
+        
     }
     
     @IBAction func sendButton(_ sender: Any) {
@@ -241,6 +302,7 @@ class GraphViewController: CommonAdsViewController, MFMailComposeViewControllerD
             gadLoaded = false
         }
         
+        showNaviItem()
         showGraphView()
     }
 

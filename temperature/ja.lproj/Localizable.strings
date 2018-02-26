@@ -33,6 +33,11 @@
 
 "ok" = "OK";
 "cancel" = "キャンセル";
+"edit" = "編集";
+"done" = "完了";
+
+"bodytemperature" = "体温の記録";
+"graph" = "体温グラフ";
 
 "deleteconfirm" = "記録を削除します。よろしいですか？";
 
@@ -53,3 +58,10 @@
 
 "graphmailsubject" = "体温グラフ";
 "graphmailbody" = "アプリ「熱はかった？」から送信";
+
+"addperson" = "人の追加";
+"addpersonbody" = "名前を入力してください";
+"editperson" = "名前の編集";
+"editpersonbody" = "名前を入力してください";
+"deletepersonbody" = "「%@」さんのデータをすべて削除します。よろしいですか？";
+

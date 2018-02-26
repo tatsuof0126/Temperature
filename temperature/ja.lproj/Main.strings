@@ -139,3 +139,24 @@
 
 /* Class = "UILabel"; text = "体温の記録を登録してください"; ObjectID = "yle-OU-rKe"; */
 "yle-OU-rKe.text" = "体温の記録を登録してください";
+
+/* Class = "UITabBarItem"; title = "People"; ObjectID = "7hc-7R-Rah"; */
+"7hc-7R-Rah.title" = "人の切替";
+
+/* Class = "UINavigationItem"; title = "People"; ObjectID = "UTr-2f-ea3"; */
+"UTr-2f-ea3.title" = "人の切替";
+
+/* Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "Ksn-uu-e42"; */
+"Ksn-uu-e42.title" = "編集";
+
+/* Class = "UIBarButtonItem"; title = "Add"; ObjectID = "LDh-0m-LnV"; */
+"LDh-0m-LnV.title" = "追加";
+
+/* Class = "UILabel"; text = "People can be switched by swiping"; ObjectID = "iAK-ko-D43"; */
+"iAK-ko-D43.text" = "「体温の記録」や「グラフ」画面で左右に";
+
+/* Class = "UILabel"; text = " in "Record" or "Graph" screen."; ObjectID = "l9U-Ba-1nf"; */
+"l9U-Ba-1nf.text" = "スワイプすると人の切り替えが行えます。";
+
+/* Class = "UILabel"; text = "Other Apps"; ObjectID = "298-U9-5pt"; */
+"298-U9-5pt.text" = "他のアプリを見る";

@@ -31,27 +31,30 @@ class Temperature: Object {
         return "id"
     }
     
-    static func getAllTemperature(ascending: Bool) -> Results<Temperature> {
+    static func getAllTemperature(personId: Int, ascending: Bool) -> Results<Temperature> {
         let realm = try! Realm()
         
-        let retList = realm.objects(Temperature.self).sorted(byKeyPath: "date", ascending: ascending)
+        let retList = realm.objects(Temperature.self)
+            .filter("personId = %d", personId)
+            .sorted(byKeyPath: "date", ascending: ascending)
         
         return retList
     }
     
-    static func getDateFilteredTemperature(date: NSDate, ascending: Bool) -> Results<Temperature> {
+    static func getDateFilteredTemperature(personId: Int, date: NSDate, ascending: Bool) -> Results<Temperature> {
         // print("StartDate : \(date.description)")
         
         let realm = try! Realm()
         
         let retList = realm.objects(Temperature.self)
+            .filter("personId = %d", personId)
             .filter("date >= %@", date)
             .sorted(byKeyPath: "date", ascending: ascending)
         
         return retList
     }
     
-    static func getDateFilteredTemperature(startDate: NSDate, endDate: NSDate,
+    static func getDateFilteredTemperature(personId: Int, startDate: NSDate, endDate: NSDate,
                                            ascending: Bool) -> Results<Temperature> {
         // print("StartDate : \(startDate.description)")
         // print("EndDate : \(endDate.description)")
@@ -59,6 +62,7 @@ class Temperature: Object {
         let realm = try! Realm()
         
         let retList = realm.objects(Temperature.self)
+            .filter("personId = %d", personId)
             .filter("date >= %@", startDate)
             .filter("date <= %@", endDate)
             .sorted(byKeyPath: "date", ascending: ascending)
@@ -142,7 +146,7 @@ class Temperature: Object {
     }
     
     static func makeTestData(){
-        let temperatureList = Temperature.getAllTemperature(ascending: false)
+        let temperatureList = Temperature.getAllTemperature(personId: 1, ascending: false)
         if temperatureList.count >= 9 {
             // すでにデータが９件以上ある場合はテストデータ作成済みと見なして作成しない
             return

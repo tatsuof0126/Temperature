@@ -15,6 +15,9 @@ class Person: Object {
     @objc dynamic var name: String = ""
     @objc dynamic var order: Int = 0
     
+    static let DEFAULT_NAME_GLOBAL = "You"
+    static let DEFAULT_NAME_JAPAN  = "あなた"
+    
     convenience init(id: Int, name: String, order: Int) {
         self.init()
         self.id = id
@@ -27,9 +30,9 @@ class Person: Object {
     }
     
     static func makeDefaultPerson() {
-        var name = "You"
+        var name = DEFAULT_NAME_GLOBAL
         if Utility.isJapaneseLocale() == true {
-            name = "あなた"
+            name = DEFAULT_NAME_JAPAN
         }
         
         let person = Person(id: 1, name: name, order: 1)
@@ -40,12 +43,17 @@ class Person: Object {
         }
     }
     
-    static func getPersonList2() -> Results<Person> {
+    static func getPerson(personId: Int) -> Person {
         let realm = try! Realm()
         
-        let retList = realm.objects(Person.self).sorted(byKeyPath: "order", ascending: true)
+        let retList = realm.objects(Person.self)
+            .filter("id = %d", personId)
         
-        return retList
+        if retList.count >= 1 {
+            return retList.first!
+        } else {
+            return Person()
+        }
     }
     
     static func getPersonList() -> [Person] {

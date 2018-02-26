@@ -42,10 +42,13 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
         
         if temperature == nil {
             temperature = Temperature()
+            temperature.personId = ConfigManager.getTargetPersonId()
             
             // 直近３日に記録があれば、症状を引き継ぐ
+            let personId = ConfigManager.getTargetPersonId()
             let date3 = NSDate(timeInterval: 60*60*24*(-3), since: Date())
-            let recent3List = Temperature.getDateFilteredTemperature(startDate: date3, endDate: NSDate(), ascending: false)
+            let recent3List = Temperature.getDateFilteredTemperature(
+                personId: personId, startDate: date3, endDate: NSDate(), ascending: false)
             if let recent3 = recent3List.first {
                 for condition in recent3.conditionList {
                     temperature.conditionList.append(condition)

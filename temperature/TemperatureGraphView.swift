@@ -204,8 +204,9 @@ class TemperatureGraphView: UIView {
         let targetStartDate = calendar.startOfDay(for: startDateModified) as NSDate
         let targetEndDate = calendar.startOfDay(for: endDateModified) as NSDate
         
+        let personId = ConfigManager.getTargetPersonId()
         let retList = Temperature.getDateFilteredTemperature(
-            startDate: targetStartDate, endDate: targetEndDate, ascending: true)
+            personId: personId, startDate: targetStartDate, endDate: targetEndDate, ascending: true)
         
         return retList
     }

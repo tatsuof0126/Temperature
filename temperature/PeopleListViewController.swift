@@ -16,6 +16,9 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
     @IBOutlet var editBtn: UIBarButtonItem!
     @IBOutlet var addBtn: UIBarButtonItem!
     
+    @IBOutlet var infoLabel1: UILabel!
+    @IBOutlet var infoLabel2: UILabel!
+    
     var personList: [Person]!
     
     override func viewDidLoad() {
@@ -27,12 +30,6 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
             Person.makeDefaultPerson()
             personList = Person.getPersonList()
         }
-        
-        // テストコード
-        for person in personList {
-            print("Person : id->\(person.id) name->\(person.name) order->\(person.order)")
-        }
-
         
         makeGadBannerView(withTab: true)
     }
@@ -74,10 +71,8 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath:IndexPath) {
-        print("Select")
         if tableView.isEditing == true {
-            // 要国際化
-            let alert = UIAlertController(title:"Edit Person", message:"Input Name", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title:NSLocalizedString("editperson", comment: ""), message:NSLocalizedString("editpersonbody", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
             alert.addTextField(configurationHandler: {(textField: UITextField!) -> Void in
                 textField.text = self.personList[indexPath.row].name
                 textField.font = UIFont.systemFont(ofSize: 18.0)
@@ -95,7 +90,7 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
                             person.name = textField.text!
                             realm.add(person, update: true)
                         }
-                        tableView.reloadData()
+                        self.updateTableView()
                     }
             }))
             alert.addAction(UIAlertAction(title: NSLocalizedString("cancel", comment: ""),
@@ -105,7 +100,7 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
         } else {
             let targetPersonId = personList[indexPath.row].id
             ConfigManager.setTargetPersonId(personId: targetPersonId)
-            tableView.reloadData()
+            updateTableView()
         }
         
         if (tableView.indexPathForSelectedRow != nil) {
@@ -134,11 +129,13 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        // 要国際化
-        Utility.showConfirmDialog(controller: self, title: "", message: "Delete People OK?", handler: {(action: UIAlertAction) -> Void in
+        let targetPerson = personList[indexPath.row]
+        let message = String(format: NSLocalizedString("deletepersonbody", comment: ""), targetPerson.name)
+        
+        Utility.showConfirmDialog(controller: self, title: "", message: message,
+                                  handler: {(action: UIAlertAction) -> Void in
             self.deletePerson(targetRow: indexPath.row)
         })
-
     }
     
     func deletePerson(targetRow: Int) {
@@ -150,19 +147,28 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
             realm.delete(targetPerson)
         }
         
-        // TODO ひもづく体温データも削除
-        
-        
+        // ひもづく体温データも削除
+        let temperatureList = Temperature.getAllTemperature(personId: targetPersonId, ascending: true)
+        for temperature in temperatureList {
+            for condition in temperature.conditionList {
+                let realm = try! Realm()
+                try! realm.write {
+                    realm.delete(condition)
+                }
+            }
+            
+            let realm = try! Realm()
+            try! realm.write {
+                realm.delete(temperature)
+            }
+        }
         
         personList = Person.getPersonList()
-        tableView.reloadData()
+        updateTableView()
     }
 
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath,
                    to destinationIndexPath: IndexPath) {
-        
-        print("Move")
-        
         let targetPerson = personList[sourceIndexPath.row]
         if let index = personList.index(of: targetPerson) {
             personList.remove(at: index)
@@ -180,12 +186,7 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
             order += 1
         }
         
-        // テストコード
-        for person in personList {
-            print("Person : id->\(person.id) name->\(person.name) order->\(person.order)")
-        }
-        
-        tableView.reloadData()
+        updateTableView()
     }
 
     /*
@@ -199,13 +200,12 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
     */
 
     @IBAction func editButton(_ sender: Any) {
-        // 要国際化
         if tableView.isEditing == true {
             tableView.isEditing = false
-            editBtn.title = "Edit"
+            editBtn.title = NSLocalizedString("edit", comment: "")
         } else {
             tableView.isEditing = true
-            editBtn.title = "Done"
+            editBtn.title = NSLocalizedString("done", comment: "")
         }
     }
     
@@ -214,8 +214,7 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
             return
         }
         
-        // 要国際化
-        let alert = UIAlertController(title:"Add Person", message:"Input Name", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title:NSLocalizedString("addperson", comment: ""), message:NSLocalizedString("addpersonbody", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
         alert.addTextField(configurationHandler: {(textField: UITextField!) -> Void in
             textField.font = UIFont.systemFont(ofSize: 18.0)
             textField.textAlignment = .center
@@ -256,9 +255,20 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
         }
         
         self.personList = Person.getPersonList()
-        tableView.reloadData()
+        updateTableView()
     }
 
+    func updateTableView(){
+        tableView.reloadData()
+        if personList.count >= 6 {
+            infoLabel1.isHidden = true
+            infoLabel2.isHidden = true
+        } else {
+            infoLabel1.isHidden = false
+            infoLabel2.isHidden = false
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -274,7 +284,7 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
             tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
         }
         
-        tableView.reloadData()
+        updateTableView()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -282,7 +292,7 @@ class PeopleListViewController: CommonAdsViewController, UITableViewDelegate, UI
         
         // 編集モードから抜ける
         tableView.isEditing = false
-        editBtn.title = "Edit"
+        editBtn.title = NSLocalizedString("edit", comment: "")
     }
     
 }

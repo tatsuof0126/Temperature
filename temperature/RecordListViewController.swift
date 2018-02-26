@@ -16,8 +16,9 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
     @IBOutlet var segmentedControl: UISegmentedControl!
     
     @IBOutlet var tableView: UITableView!
-    
     @IBOutlet var baseView: UIView!
+    
+    @IBOutlet var naviItem: UINavigationItem!
     
     @IBOutlet var infoLabel1: UILabel!
     @IBOutlet var infoLabel2: UILabel!
@@ -35,23 +36,83 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
             Person.makeDefaultPerson()
         }
         
-        // TODO ヘッダーに名前を出す
+        // ヘッダーに名前を出す
+        showNaviItem()
         
+        // 画面のスワイプ設定
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(RecordListViewController.didSwipe(sender:)))
+        rightSwipe.direction = .right
+        tableView.addGestureRecognizer(rightSwipe)
         
-        
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(RecordListViewController.didSwipe(sender:)))
+        leftSwipe.direction = .left
+        tableView.addGestureRecognizer(leftSwipe)
         
         makeGadBannerView(withTab: true)
     }
     
+    func showNaviItem(){
+        let personList = Person.getPersonList()
+        if personList.count >= 2 || (personList.first?.name != Person.DEFAULT_NAME_GLOBAL && personList.first?.name !=  Person.DEFAULT_NAME_JAPAN ) {
+            let person = Person.getPerson(personId: ConfigManager.getTargetPersonId())
+            if Utility.isJapaneseLocale() && person.name != Person.DEFAULT_NAME_JAPAN {
+                naviItem.title = person.name + "さん"
+            } else {
+                naviItem.title = person.name
+            }
+        } else {
+            naviItem.title = NSLocalizedString("bodytemperature", comment: "")
+        }
+    }
+    
+    @objc func didSwipe(sender: UISwipeGestureRecognizer) {
+        let personList = Person.getPersonList()
+        let targetPersonId = ConfigManager.getTargetPersonId()
+        var targetPersonIndex = -99
+        
+        for (i, person) in personList.enumerated() {
+            if person.id == targetPersonId {
+                targetPersonIndex = i
+            }
+        }
+        
+        if personList.count <= 1 || targetPersonIndex == -99 {
+            return
+        }
+        
+        var changed = false
+        if sender.direction == .left {
+            if targetPersonIndex < (personList.count-1) {
+                targetPersonIndex += 1
+                changed = true
+            }
+        } else if sender.direction == .right {
+            if targetPersonIndex > 0 {
+                targetPersonIndex -= 1
+                changed = true
+            }
+        }
+        
+        if changed == true {
+            ConfigManager.setTargetPersonId(personId: personList[targetPersonIndex].id)
+            loadTemperatureData()
+            showInfoLabel()
+            showNaviItem()
+            tableView.reloadData()
+        }
+        
+    }
+    
     func loadTemperatureData(){
+        let personId = ConfigManager.getTargetPersonId()
         if segmentedControl.selectedSegmentIndex == 0 {
             let date7 = NSDate(timeInterval: 60*60*24*(-7), since: Date())
-            temperatureList = Temperature.getDateFilteredTemperature(date: date7, ascending: false)
+            temperatureList = Temperature.getDateFilteredTemperature(personId: personId, date: date7, ascending: false)
         } else if segmentedControl.selectedSegmentIndex == 1 {
             let date30 = NSDate(timeInterval: 60*60*24*(-30), since: Date())
-            temperatureList = Temperature.getDateFilteredTemperature(date: date30, ascending: false)
+            temperatureList = Temperature.getDateFilteredTemperature(personId: personId, date: date30, ascending: false)
         } else if segmentedControl.selectedSegmentIndex == 2 {
-            temperatureList = Temperature.getAllTemperature(ascending: false)
+            temperatureList = Temperature.getAllTemperature(personId: personId, ascending: false)
         }
     }
     
@@ -242,6 +303,7 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
         
         loadTemperatureData()
         showInfoLabel()
+        showNaviItem()
         tableView.reloadData()
     }
 
@@ -250,7 +312,12 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
         
         let delegate = UIApplication.shared.delegate as! AppDelegate
         if delegate.showInterstitialFlag {
-            delegate.showInterstitial(self)
+            let showed = delegate.showInterstitial(self)
+            
+            // インタースティシャル非表示で体温を５件以上登録してたらレビュー依頼
+            if showed == false && temperatureList.count >= 5 {
+                AppDelegate.requestReview()
+            }
         }
     }
     
