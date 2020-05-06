@@ -56,4 +56,8 @@ class Utility {
         return orgString.replacingOccurrences(of: ",", with: ".")
     }
 
+    static func nextlineToSpace(orgString: String) -> String {
+        return orgString.replacingOccurrences(of: "\r\n|\n", with: " ", options: NSString.CompareOptions.regularExpression, range: nil)
+    }
+
 }

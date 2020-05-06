@@ -148,9 +148,11 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
             detailLabelStr.append(" ")
             detailLabelStr.append(temperature.getConditionString())
         }
-        if temperature.memo != "" {
-            detailLabelStr.append(" ")
-            detailLabelStr.append(NSLocalizedString("withmemo", comment: ""))
+        
+        let memoStr = Utility.nextlineToSpace(orgString: temperature.memo).trimmingCharacters(in: .whitespaces)
+        if memoStr != "" {
+            detailLabelStr.append(" [\(memoStr)]")
+            // detailLabelStr.append(NSLocalizedString("withmemo", comment: ""))
         }
         
         cell.detailTextLabel?.text = detailLabelStr as String
