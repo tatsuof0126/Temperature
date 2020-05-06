@@ -51,4 +51,9 @@ class Utility {
         
         controller.present(alert, animated: true, completion: nil)
     }
+    
+    static func commaToPeriod(orgString: String) -> String {
+        return orgString.replacingOccurrences(of: ",", with: ".")
+    }
+
 }

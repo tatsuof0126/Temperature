@@ -143,7 +143,10 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
             return
         }
         
-        let temperatureDouble: Double = NSString(string: temperatureText.text!).doubleValue
+        // カンマはピリオドに変換
+        let temperatureDouble: Double = NSString(string: Utility.commaToPeriod(orgString: temperatureText.text!)).doubleValue
+        
+        // let temperatureDouble: Double = NSString(string: temperatureText.text!).doubleValue
         
         let realm = try! Realm()
         try! realm.write {
@@ -251,8 +254,11 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
             retString.append(NSLocalizedString("noinput", comment: ""))
         }
         
-        // 体温が数値かどうかチェック
-        let temperatureDouble: Double = NSString(string: temperatureText.text!).doubleValue
+        // 体温が数値かどうかチェック（カンマはピリオドに変換）
+        let temperatureDouble: Double = NSString(string: Utility.commaToPeriod(orgString: temperatureText.text!)).doubleValue
+        
+        // let temperatureDouble: Double = NSString(string: temperatureText.text!).doubleValue
+        
         if temperatureText.text != "" && temperatureDouble == 0.0 {
             retString.append(NSLocalizedString("invalidtemperature", comment: ""))
         }

@@ -9,7 +9,7 @@
 import UIKit
 import GoogleMobileAds
 
-class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITableViewDataSource {
+class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     @IBOutlet var scrollView: UIScrollView!
     
@@ -93,8 +93,6 @@ class ConfigViewController: CommonAdsViewController, UITableViewDelegate, UITabl
     }
     
     @IBAction func onTap(_ sender: Any) {
-        print("ontap")
-        
         // 無関係の場所をタップされたら編集を終わらせる
         self.view.endEditing(true)
     }

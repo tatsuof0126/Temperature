@@ -38,6 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
         
         // Admobの初期化、インタースティシャルを準備しておく
         GADMobileAds.configure(withApplicationID: "ca-app-pub-6719193336347757~1520777841")
+        GADMobileAds.sharedInstance().applicationVolume = 0.01
         showInterstitialFlag = false
         prepareInterstitial()
         
@@ -85,6 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
         let gadRequest:GADRequest = GADRequest()
         // gadRequest.testDevices = [kGADSimulatorID]
         // gadRequest.testDevices = @[ @"2dc8fc8942df647fb90b48c2272a59e6" ]
+        // gadRequest.testDevices = [ "e6e2fabbcf39785caebdc06c14fce0bc" ] // iPhone8
         gadInterstitial.load(gadRequest)
     }
     
@@ -96,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
         }
         
         let rand = (Int)(arc4random_uniform(100))
-        // print("rand : \(rand) show -> \(rand < AppDelegate.SHOW_INTERSTITIAL_RATIO)")
+        print("rand : \(rand) show -> \(rand < AppDelegate.SHOW_INTERSTITIAL_RATIO)")
         if rand >= AppDelegate.SHOW_INTERSTITIAL_RATIO {
             return false
         }
@@ -116,12 +118,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
     }
 
     func interstitialDidReceiveAd(_ ad: GADInterstitial) {
-        // print("interstitialDidReceiveAd")
+        print("interstitialDidReceiveAd")
     }
     
     /// Tells the delegate an ad request failed.
     func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {
-        // print("interstitial:didFailToReceiveAdWithError: \(error.localizedDescription)")
+        print("interstitial:didFailToReceiveAdWithError: \(error.localizedDescription)")
     }
     
     /// Tells the delegate that an interstitial will be presented.
@@ -147,7 +149,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
     
     static func requestReview() {
         let rand = (Int)(arc4random_uniform(100))
-        print("rand : \(rand) show -> \(rand < AppDelegate.SHOW_REQUESTREVIEW_RATIO)")
+        // print("rand : \(rand) show -> \(rand < AppDelegate.SHOW_REQUESTREVIEW_RATIO)")
         if rand >= AppDelegate.SHOW_REQUESTREVIEW_RATIO {
             return
         }
