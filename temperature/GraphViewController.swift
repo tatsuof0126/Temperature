@@ -276,7 +276,8 @@ class GraphViewController: CommonAdsViewController, MFMailComposeViewControllerD
     func showGraphView() {
         // グラフビューに値をセット
         graphView.endDate = baseDate
-        graphView.range = ConfigManager.getGraphRangeType() == 0 ? 3 : 7
+        graphView.rangeType = ConfigManager.getGraphRangeType()
+        graphView.range = ConfigManager.getGraphRange()
         
         // グラフを再描画
         graphView.setNeedsDisplay()

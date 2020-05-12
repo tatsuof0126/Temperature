@@ -191,25 +191,31 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
         
         let action1 = UIAlertAction(title: NSLocalizedString("sendbyline", comment: ""), style: UIAlertActionStyle.default, handler: {
             (action: UIAlertAction!) in
-            self.sendToLine()
+            self.sendLine()
         })
         
         let action2 = UIAlertAction(title: NSLocalizedString("sendbymail", comment: ""), style: UIAlertActionStyle.default, handler: {
             (action: UIAlertAction!) in
-            self.sendToMail()
+            self.sendTextMail()
         })
+        
+        // let action3 = UIAlertAction(title: NSLocalizedString("sendbymailcsv", comment: ""), style: UIAlertActionStyle.default, handler: {
+        //    (action: UIAlertAction!) in
+        //    self.sendCSVMail()
+        // })
         
         let cancel = UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: UIAlertActionStyle.cancel, handler: nil)
         
         alert.addAction(action1)
         alert.addAction(action2)
+        // alert.addAction(action3)
         alert.addAction(cancel)
         
         self.present(alert, animated: true, completion: nil)
         
     }
     
-    func sendToLine(){
+    func sendLine(){
         // LINEに送る画像を取得（TableViewの内容）
         let image = baseView.getScreenShot()
         
@@ -232,6 +238,7 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
         }
     }
     
+    /*
     func sendToMail() {
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
@@ -257,7 +264,94 @@ class RecordListViewController: CommonAdsViewController, UITableViewDelegate, UI
                               message: NSLocalizedString("sendfailmail", comment: ""))
         }
     }
+    */
     
+    func sendTextMail() {
+        if MFMailComposeViewController.canSendMail() == false {
+            Utility.showAlert(controller: self, title: "",
+                              message: NSLocalizedString("sendfailmail", comment: ""))
+            return
+        }
+        
+        // メール本文の作成
+        var bodyStr = ""
+        
+        bodyStr.append(NSLocalizedString("recordmailbody", comment: ""))
+        bodyStr.append("\n---\n")
+        
+        for temperature in temperatureList {
+            bodyStr.append(temperature.getTemperatureDateStringForTextMail())
+            bodyStr.append(" ")
+            bodyStr.append(temperature.getTemperatureString(withUnit: true))
+            
+            let conditionString = temperature.getConditionStringForTextMail()
+            if conditionString != ""{
+                bodyStr.append(" ")
+                bodyStr.append(conditionString)
+            }
+            
+            let memoStr = Utility.nextlineToSpace(orgString: temperature.memo).trimmingCharacters(in: .whitespaces)
+            if memoStr != "" {
+                bodyStr.append(" ")
+                bodyStr.append(" [\(memoStr)]")
+                // detailLabelStr.append(NSLocalizedString("withmemo", comment: ""))
+            }
+            bodyStr.append("\n")
+        }
+        
+        // メールアプリを立ち上げて送信
+        let mail = MFMailComposeViewController()
+        mail.mailComposeDelegate = self
+        
+        mail.setToRecipients([ConfigManager.getToAddress()])
+        mail.setSubject(NSLocalizedString("recordmailsubject", comment: ""))
+        mail.setMessageBody(bodyStr, isHTML: false)
+        
+        present(mail, animated: true, completion: nil)
+    }
+    
+    /*
+    func sendCSVMail() {
+        if MFMailComposeViewController.canSendMail() == false {
+            Utility.showAlert(controller: self, title: "",
+                              message: NSLocalizedString("sendfailmail", comment: ""))
+            return
+        }
+        
+        // CSVファイルの作成
+        var bodyStr = ""
+        for temperature in temperatureList {
+            bodyStr.append("\"")
+            bodyStr.append(temperature.getTemperatureDateStringForCSV())
+            bodyStr.append("\",")
+            bodyStr.append(temperature.getTemperatureString(withUnit: true))
+            bodyStr.append(",\"")
+            bodyStr.append(temperature.getConditionStringForCSV())
+            bodyStr.append("\",\"")
+            bodyStr.append(temperature.memo)
+            bodyStr.append("\"\r\n")
+        }
+        
+        // メールアプリを立ち上げて送信
+        let mail = MFMailComposeViewController()
+        mail.mailComposeDelegate = self
+        
+        mail.setToRecipients([ConfigManager.getToAddress()])
+        mail.setSubject(NSLocalizedString("recordmailsubject", comment: ""))
+        mail.setMessageBody(NSLocalizedString("recordmailbody", comment: ""), isHTML: false)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let yyyymmdd = dateFormatter.string(from: Date())
+        let filename = "temperaturerecord"+yyyymmdd+".csv"
+        
+        mail.addAttachmentData(bodyStr.data(using: String.Encoding.utf8, allowLossyConversion: true)!, mimeType: "text/csv", fileName: filename)
+        
+        present(mail, animated: true, completion: nil)
+        
+    }
+    */
+ 
     func mailComposeController(_ controller: MFMailComposeViewController,
                                didFinishWith result: MFMailComposeResult, error: Error?) {
         dismiss(animated: true, completion: nil)

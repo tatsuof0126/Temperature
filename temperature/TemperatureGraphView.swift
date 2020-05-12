@@ -12,7 +12,8 @@ import RealmSwift
 class TemperatureGraphView: UIView {
     
     var endDate:Date = Date()
-    var range:Int = 3
+    var rangeType = 0
+    var range = 3
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -88,10 +89,11 @@ class TemperatureGraphView: UIView {
         
         UIColor.black.setStroke()
         
-        // X軸の目盛（３日表示か７日表示かで分ける）
-        let memoriXInfo = (range == 3 ? [45, 132, 219, 306] : [45, 83, 121, 159, 197, 235, 273, 311]);
+        // X軸の目盛（３日/７日/１４日/３０日表示かで分ける）
+        let memoriXInfo = [[45, 132, 219, 306], [45, 83, 121, 159, 197, 235, 273, 311], [45, 64, 83, 102, 121, 140, 159, 178, 197, 216, 235, 254, 273, 292, 311], [66, 126, 186, 246, 306]]
+        // let memoriXInfo = (range == 3 ? [45, 132, 219, 306] : [45, 83, 121, 159, 197, 235, 273, 311]);
         
-        for x in memoriXInfo {
+        for x in memoriXInfo[rangeType] {
             UIColor.black.setStroke()
             let memoriline = UIBezierPath();
             memoriline.lineWidth = 0.5
@@ -107,38 +109,31 @@ class TemperatureGraphView: UIView {
         ]
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M/d"
-
-        var date = endDate
-        var pointX = (range == 3 ? 245 : 275)
-        for _ in 0 ..< range {
+        
+        let endDateInit = [0.0, 0.0, 0.0, -6.0]
+        let dateMove = [-1.0, -1.0, -2.0, -7.0]
+        let pointXInit = [245, 275, 285, 246]
+        let pointXMove = [87, 38, 38, 60]
+        let pointYAdjust = [0, 0, 4, 0]
+        let strCount = [3, 7, 7, 4]
+        
+        var date = Date(timeInterval: 60*60*24*endDateInit[rangeType], since: endDate)
+        var pointX = pointXInit[rangeType]
+        for _ in 0 ..< strCount[rangeType] {
             let dateStr = dateFormatter.string(from: date)
             var adjustX = 0
-            if dateStr.count == 3 {
+            if dateStr.count == 3 && rangeType != 3 {
                 adjustX = 6
-            } else if dateStr.count == 4 {
+            } else if dateStr.count == 4 && rangeType != 3 {
                 adjustX = 3
             }
             
-            dateStr.draw(at: CGPoint(x: pointX+adjustX, y: baselineXPointY+4), withAttributes: dayAttr)
+            dateStr.draw(at: CGPoint(x: pointX+adjustX, y: baselineXPointY+4+pointYAdjust[rangeType]), withAttributes: dayAttr)
             
-            date = Date(timeInterval: 60*60*24*(-1), since: date)
-            pointX = pointX - (range == 3 ? 87 : 38)
+            date = Date(timeInterval: 60*60*24*dateMove[rangeType], since: date)
+            pointX = pointX - pointXMove[rangeType]
         }
         
-        /*
-         dateStrList[0].draw(at: CGPoint(x: 245, y: 254), withAttributes: dayAttr)
-         dateStrList[1].draw(at: CGPoint(x: 158, y: 254), withAttributes: dayAttr)
-         dateStrList[2].draw(at: CGPoint(x: 71, y: 254), withAttributes: dayAttr)
-         */
-        /*
-        dateStrList[0].draw(at: CGPoint(x: 275+xAdjustList[0], y: 254), withAttributes: dayAttr)
-        dateStrList[1].draw(at: CGPoint(x: 237+xAdjustList[1], y: 254), withAttributes: dayAttr)
-        dateStrList[2].draw(at: CGPoint(x: 199+xAdjustList[2], y: 254), withAttributes: dayAttr)
-        dateStrList[3].draw(at: CGPoint(x: 161+xAdjustList[3], y: 254), withAttributes: dayAttr)
-        dateStrList[4].draw(at: CGPoint(x: 123+xAdjustList[4], y: 254), withAttributes: dayAttr)
-        dateStrList[5].draw(at: CGPoint(x: 85+xAdjustList[5], y: 254), withAttributes: dayAttr)
-        dateStrList[6].draw(at: CGPoint(x: 47+xAdjustList[6], y: 254), withAttributes: dayAttr)
-         */
     }
     
     func drawTemperature(){
@@ -167,7 +162,17 @@ class TemperatureGraphView: UIView {
             let endDateModified = Date(timeInterval: TimeInterval(60*60*24*(1)), since: endDate)
             let targetEndDate = Calendar(identifier: .gregorian).startOfDay(for: endDateModified)
             let dateSpan = temperature.date.timeIntervalSince(targetEndDate)
-            let pointX = (range == 3 ? 306 + (dateSpan/60/60/24) * 87 : 311 + (dateSpan/60/60/24) * 38)
+            
+            var pointX : Double = 0.0
+            if(rangeType == 0){
+                pointX = 306 + (dateSpan/60/60/24) * 87
+            } else if(rangeType == 1){
+                pointX = 311 + (dateSpan/60/60/24) * 38
+            } else if(rangeType == 2){
+                pointX = 311 + (dateSpan/60/60/24) * 19
+            } else if(rangeType == 3){
+                pointX = 306 + ((dateSpan/60/60/24) * 60) / 7.0
+            }
             
             pointList.append((pointX: pointX, pointY: pointY))
         }

@@ -25,6 +25,8 @@
 
 /* Class = "UISegmentedControl"; Aca-QU-XQi.segmentTitles[1] = "7 days"; ObjectID = "Aca-QU-XQi"; */
 "Aca-QU-XQi.segmentTitles[1]" = "7日間";
+"Aca-QU-XQi.segmentTitles[2]" = "14日間";
+"Aca-QU-XQi.segmentTitles[3]" = "30日間";
 
 /* Class = "UILabel"; text = "Condition"; ObjectID = "D6i-sc-aZa"; */
 "D6i-sc-aZa.text" = "症状";

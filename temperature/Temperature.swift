@@ -83,6 +83,26 @@ class Temperature: Object {
     func getTemperatureDateNSAttributedString() -> NSAttributedString {
         return NSAttributedString(string: getTemperatureDateString())
     }
+
+    func getTemperatureDateStringForTextMail() -> String {
+        let dateFormatter = DateFormatter()
+        if(Utility.isJapaneseLocale()){
+            dateFormatter.dateFormat = "M月d日(E) H:mm" // 日付フォーマットの設定
+        } else {
+            dateFormatter.dateFormat = "E, MMM d h:mm a" // 日付フォーマットの設定
+        }
+        return dateFormatter.string(from: date)
+    }
+    
+    func getTemperatureDateStringForCSV() -> String {
+        let dateFormatter = DateFormatter()
+        if(Utility.isJapaneseLocale()){
+            dateFormatter.dateFormat = "y年M月d日(E) H:mm" // 日付フォーマットの設定
+        } else {
+            dateFormatter.dateFormat = "E, MMM d, y h:mm a" // 日付フォーマットの設定
+        }
+        return dateFormatter.string(from: date)
+    }
     
     func getTemperatureDouble() -> Double {
         let displayFahrenheit = ConfigManager.isUseFahrenheit()
@@ -124,6 +144,28 @@ class Temperature: Object {
         return Temperature.getConditionString(conditionList: conditionList)
     }
 
+    func getConditionStringForTextMail() -> String {
+        var conditionStr = ""
+        for (index, condition) in conditionList.enumerated() {
+            if index != 0 {
+                conditionStr.append(",")
+            }
+            conditionStr.append(condition.condition)
+        }
+        return conditionStr
+    }
+    
+    func getConditionStringForCSV() -> String {
+        var conditionStr = ""
+        for (index, condition) in conditionList.enumerated() {
+            if index != 0 {
+                conditionStr.append(",")
+            }
+            conditionStr.append(condition.condition)
+        }
+        return conditionStr
+    }
+    
     static func getTemperatureDateString(date: Date) -> String {
         let dateFormatter = DateFormatter()
         if(Utility.isJapaneseLocale()){
@@ -274,4 +316,21 @@ class Temperature: Object {
         }
     }
     
+    static func makeTestData2(){
+        
+        let realm = try! Realm()
+        try! realm.write {
+            for _ in 0...1000 {
+                let temperature = Temperature()
+                temperature.setId()
+                // 1583798400 = 2020/03/10 09:00:00
+                let dateInt = 1583798400 + (60*60*24)*(Int)(arc4random_uniform(60)) + (60*60)*(Int)(arc4random_uniform(24)) + (60)*(Int)(arc4random_uniform(60))
+                temperature.date = Date(timeIntervalSince1970:TimeInterval(dateInt))
+                temperature.temperature = (Double)((350 + arc4random_uniform(40)) / 10)
+                
+                realm.add(temperature, update: true)
+            }
+        }
+        
+    }
 }

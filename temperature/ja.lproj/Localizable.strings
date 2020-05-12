@@ -49,6 +49,7 @@
 "selectmethod" = "送信方法を選んでください";
 "sendbyline" = "LINEで送る";
 "sendbymail" = "メールで送る";
+"sendbymailcsv" = "メールで送る（CSV形式）";
 "sendfailline" = "送信できませんでした。LINEがインストールされているかを確認してください。";
 "sendfailmail" = "送信できませんでした。メールアプリの設定を確認してください。";
 "sendcomplete" = "送信しました。";

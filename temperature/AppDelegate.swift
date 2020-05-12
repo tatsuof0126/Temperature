@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
     
     // テストデータ作成用（リリース時はfalse）
     static let MAKE_TEST_DATA = false
+    static let MAKE_TEST_DATA2 = false
     
     // インタースティシャル広告の表示割合（％）
     static let SHOW_INTERSTITIAL_RATIO = 35
@@ -50,7 +51,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GADInterstitialDelegate {
         if AppDelegate.MAKE_TEST_DATA == true {
             Temperature.makeTestData()
         }
-        
+        if AppDelegate.MAKE_TEST_DATA2 == true {
+            Temperature.makeTestData2()
+        }
+
         return true
     }
 

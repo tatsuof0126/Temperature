@@ -37,6 +37,8 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
     var temperatureDate: Date!
     var conditionList: List<TemperatureCondition>!
     
+    var addPeriod = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,6 +74,7 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
         if temperature.temperature != 0.0 {
             temperatureText.text = temperature.getTemperatureString(withUnit: false)
         }
+        temperatureText.addTarget(self, action: #selector(temperatureTextDidChange(_:)), for: .editingChanged)
         
         if ConfigManager.isUseFahrenheit() {
             unitsLabel.text = "°F"
@@ -276,6 +279,40 @@ class InputRecordViewController: CommonAdsViewController, UITextFieldDelegate, U
     }
     */
 
+    @objc func temperatureTextDidChange(_ textField: UITextField) {
+        print("textFieldDidChange called")
+        if (textField != temperatureText){
+            return
+        }
+        
+        let temptext = temperatureText.text!
+        if(temptext.hasSuffix("..")){
+            temperatureText.text = (temptext as NSString).substring(to: temptext.count-1)
+        }
+        
+        if(addPeriod == false && (
+            temptext == "33" || temptext == "34" ||
+            temptext == "35" || temptext == "36" ||
+            temptext == "37" || temptext == "38" ||
+            temptext == "39" || temptext == "40" ||
+            temptext == "41" || temptext == "42" ||
+            temptext == "94" || temptext == "95" ||
+            temptext == "96" || temptext == "97" ||
+            temptext == "98" || temptext == "99" ||
+            temptext == "100" || temptext == "101" ||
+            temptext == "102" || temptext == "103" ||
+            temptext == "104" || temptext == "105" ||
+            temptext == "106" || temptext == "107")){
+            temperatureText.text = temptext + "."
+            addPeriod = true
+        }
+        
+        if(temptext.count <= 1){
+            addPeriod = false
+        }
+        
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // ピッカーを閉じる
         closePicker()

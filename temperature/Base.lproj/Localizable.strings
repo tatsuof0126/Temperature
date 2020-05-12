@@ -49,6 +49,7 @@
 "selectmethod" = "Select a send method";
 "sendbyline" = "Send by LINE";
 "sendbymail" = "Send by E-mail";
+"sendbymailcsv" = "Send CSV by E-mail";
 "sendfailline" = "Sending failed. Please check if LINE is installed.";
 "sendfailmail" = "Sending failed. Please check the setting of the mail application.";
 "sendcomplete" = "Send complete";
